@@ -1,0 +1,32 @@
+
+# Ambiente virtual Python
+.venv/
+venv/
+
+# Segredos e configurações locais
+.env
+.env.*
+!.env.example
+
+# Dependências PHP/Laravel
+/backend/vendor/
+/backend/.env
+/backend/.env.*
+!/backend/.env.example
+
+# Dependências JavaScript
+node_modules/
+/backend/node_modules/
+
+# Cache, logs e arquivos temporários do Laravel
+/backend/storage/logs/*
+/backend/storage/framework/cache/*
+/backend/storage/framework/sessions/*
+/backend/storage/framework/views/*
+/backend/bootstrap/cache/*.php
+
+# Arquivos do sistema e editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
