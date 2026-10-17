@@ -1,14 +1,53 @@
 @extends('layouts.app')
 
 @section('content')
+
+@if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show">
+        {{ session('success') }}
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Fechar">
+        </button>
+    </div>
+@endif
+
 <div class="container">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
+
         <h1>Detalhes do Chamado</h1>
 
-        <a href="{{ route('tickets.index') }}" class="btn btn-secondary">
-            Voltar
-        </a>
+        <div class="d-flex gap-2">
+
+            <a href="{{ route('tickets.edit', $ticket) }}"
+            class="btn btn-warning">
+                Editar chamado
+            </a>
+
+            <form action="{{ route('tickets.destroy', $ticket) }}"
+                method="POST"
+                onsubmit="return confirm('Tem certeza que deseja excluir este chamado?');">
+
+                @csrf
+                @method('DELETE')
+
+                <button type="submit"
+                        class="btn btn-danger">
+                    Excluir chamado
+                </button>
+
+            </form>
+
+            <a href="{{ route('tickets.index') }}"
+            class="btn btn-secondary">
+                Voltar
+            </a>
+
+        </div>
+
     </div>
 
     <div class="card">
@@ -31,12 +70,12 @@
 
             <p>
                 <strong>Prioridade:</strong>
-                {{ ucfirst($ticket->priority) }}
+                {{ $ticket->priority_label }}
             </p>
 
             <p>
                 <strong>Status:</strong>
-                {{ ucfirst($ticket->status) }}
+                {{ $ticket->status_label }}       
             </p>
 
             <p>

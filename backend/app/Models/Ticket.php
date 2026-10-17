@@ -13,4 +13,26 @@ class Ticket extends Model
         'priority',
         'status',
     ];
+
+    public function getPriorityLabelAttribute(): string
+    {
+        return match ($this->priority) {
+            'low' => 'Baixa',
+            'medium' => 'Média',
+            'high' => 'Alta',
+            'critical' => 'Crítica',
+            default => $this->priority,
+        };
+    }
+
+    public function getStatusLabelAttribute(): string
+    {
+        return match ($this->status) {
+            'open' => 'Aberto',
+            'in_progress' => 'Em andamento',
+            'waiting' => 'Aguardando',
+            'resolved' => 'Resolvido',
+            default => $this->status,
+        };
+    }
 }
