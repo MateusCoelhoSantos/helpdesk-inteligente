@@ -34,4 +34,9 @@ class TicketController extends Controller
             ->route('tickets.index')
             ->with('success', 'Chamado criado com sucesso!');
     }
+
+    public function show(Ticket $ticket)
+    {
+        return view('tickets.show', compact('ticket'));
+    }
 }

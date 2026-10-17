@@ -32,7 +32,10 @@
                     <div class="d-flex justify-content-between flex-wrap gap-2">
                         <div>
                             <h2 class="h5 mb-1">
-                                #{{ $ticket->id }} · {{ $ticket->title }}
+                                <a href="{{ route('tickets.show', $ticket) }}"
+                                class="text-decoration-none">
+                                    #{{ $ticket->id }} · {{ $ticket->title }}
+                                </a>
                             </h2>
                             <p class="text-secondary mb-2">
                                 {{ Str::limit($ticket->description, 150) }}
