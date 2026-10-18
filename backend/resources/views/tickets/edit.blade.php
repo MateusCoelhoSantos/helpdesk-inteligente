@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.helpdesk')
 
 @section('title', 'Editar chamado | HelpDesk Inteligente')
 

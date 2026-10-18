@@ -7,9 +7,34 @@ use Illuminate\Http\Request;
 
 class TicketController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $tickets = Ticket::latest()->paginate(10);
+        $query = Ticket::query();
+
+        if ($request->filled('q')) {
+            $query->where(
+                'title',
+                'like',
+                '%' . $request->q . '%'
+            );
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('priority')) {
+            $query->where('priority', $request->priority);
+        }
+
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+
+        $tickets = $query
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return view('tickets.index', compact('tickets'));
     }

@@ -1,5 +1,4 @@
-
-@extends('layouts.app')
+@extends('layouts.helpdesk')
 
 @section('title', 'Novo chamado | HelpDesk Inteligente')
 
@@ -63,7 +62,7 @@
                         <option value="hardware" @selected(old('category') === 'hardware')>Hardware</option>
                         <option value="software" @selected(old('category') === 'software')>Software</option>
                         <option value="network" @selected(old('category') === 'network')>Rede</option>
-                        <option value="access" @selected(old('category') === 'access')>Acesso e permissões</option>
+                        <option value="access" @selected(old('category') === 'access')>Acesso e Permissões</option>
                         <option value="other" @selected(old('category') === 'other')>Outro</option>
                     </select>
                     @error('category')

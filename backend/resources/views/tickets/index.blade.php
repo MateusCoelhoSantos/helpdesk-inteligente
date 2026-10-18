@@ -1,5 +1,4 @@
-
-@extends('layouts.app')
+@extends('layouts.helpdesk')
 
 @section('title', 'Chamados | HelpDesk Inteligente')
 
@@ -25,6 +24,168 @@
         </div>
     @endif
 
+    <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body">
+
+            <form method="GET"
+                action="{{ route('tickets.index') }}">
+
+                <div class="row g-2 align-items-end">
+
+                    <div class="col-md-3">
+
+                        <label for="q" class="form-label">
+                            Buscar por título
+                        </label>
+
+                        <input
+                            type="text"
+                            id="q"
+                            name="q"
+                            class="form-control"
+                            placeholder="Digite parte do título..."
+                            value="{{ request('q') }}">
+
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <label for="status" class="form-label">
+                            Status
+                        </label>
+
+                        <select
+                            id="status"
+                            name="status"
+                            class="form-select">
+
+                            <option value="">
+                                Todos
+                            </option>
+
+                            <option value="open"
+                                @selected(request('status') === 'open')>
+                                Aberto
+                            </option>
+
+                            <option value="in_progress"
+                                @selected(request('status') === 'in_progress')>
+                                Em andamento
+                            </option>
+
+                            <option value="waiting"
+                                @selected(request('status') === 'waiting')>
+                                Aguardando
+                            </option>
+
+                            <option value="resolved"
+                                @selected(request('status') === 'resolved')>
+                                Resolvido
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <label for="priority" class="form-label">
+                            Prioridade
+                        </label>
+
+                        <select
+                            id="priority"
+                            name="priority"
+                            class="form-select">
+
+                            <option value="">
+                                Todas
+                            </option>
+
+                            <option value="low"
+                                @selected(request('priority') === 'low')>
+                                Baixa
+                            </option>
+
+                            <option value="medium"
+                                @selected(request('priority') === 'medium')>
+                                Média
+                            </option>
+
+                            <option value="high"
+                                @selected(request('priority') === 'high')>
+                                Alta
+                            </option>
+
+                            <option value="critical"
+                                @selected(request('priority') === 'critical')>
+                                Crítica
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <label for="category" class="form-label">
+                            Categoria
+                        </label>
+
+                        <select
+                            id="category"
+                            name="category"
+                            class="form-select">
+
+                            <option value="">
+                                Todas
+                            </option>
+
+                            <option value="hardware"
+                                @selected(request('category') === 'hardware')>
+                                Hardware
+                            </option>
+
+                            <option value="software"
+                                @selected(request('category') === 'software')>
+                                Software
+                            </option>
+
+                            <option value="network"
+                                @selected(request('category') === 'network')>
+                                Rede
+                            </option>
+
+                            <option value="access"
+                                @selected(request('category') === 'access')>
+                                Acesso e Permissões
+                            </option>
+
+                            <option value="other"
+                                @selected(request('category') === 'other')>
+                                Outro
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+                            Buscar
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
     <div class="card border-0 shadow-sm">
         <div class="card-body">
             @forelse ($tickets as $ticket)
@@ -41,49 +202,66 @@
                                 {{ Str::limit($ticket->description, 150) }}
                             </p>
                             <small class="text-secondary">
-                                Categoria: {{ $ticket->category ?? 'Não definida' }}
+                                Categoria: {{ $ticket->category_label }}
                             </small>
                         </div>
 
                         <div class="text-md-end">
-                            @php
-                                $priorities = [
-                                    'low' => 'Baixa',
-                                    'medium' => 'Média',
-                                    'high' => 'Alta',
-                                    'critical' => 'Crítica',
-                                ];
-
-                                $statuses = [
-                                    'open' => 'Aberto',
-                                    'in_progress' => 'Em andamento',
-                                    'waiting' => 'Aguardando',
-                                    'resolved' => 'Resolvido',
-                                ];
-                            @endphp
 
                             <span class="badge text-bg-primary">
-                                {{ $priorities[$ticket->priority] ?? $ticket->priority }}
+                                {{ $ticket->priority_label }}
                             </span>
 
                             <span class="badge text-bg-secondary">
-                                {{ $statuses[$ticket->status] ?? $ticket->status }}
+                                {{ $ticket->status_label }}
                             </span>
                         </div>
                     </div>
                 </div>
+
             @empty
                 <div class="text-center py-5">
-                    <h2 class="h5">Nenhum chamado cadastrado</h2>
-                    <p class="text-secondary">
-                        Crie seu primeiro chamado para começar.
-                    </p>
-                    <a href="{{ route('tickets.create') }}"
+
+                    @if(
+                        request()->filled('q') ||
+                        request()->filled('status') ||
+                        request()->filled('priority') ||
+                        request()->filled('category')
+                    )
+
+                        <h2 class="h5">
+                            Nenhum chamado encontrado
+                        </h2>
+
+                        <p class="text-secondary">
+                            Tente alterar os filtros ou os termos utilizados na busca.
+                        </p>
+
+                        <a href="{{ route('tickets.index') }}"
+                        class="btn btn-outline-primary">
+                            Limpar filtros
+                        </a>
+
+                    @else
+
+                        <h2 class="h5">
+                            Nenhum chamado cadastrado
+                        </h2>
+
+                        <p class="text-secondary">
+                            Crie seu primeiro chamado para começar.
+                        </p>
+
+                        <a href="{{ route('tickets.create') }}"
                         class="btn btn-primary">
-                        Criar primeiro chamado
-                    </a>
+                            Criar primeiro chamado
+                        </a>
+
+                    @endif
+
                 </div>
             @endforelse
+
         </div>
     </div>
 

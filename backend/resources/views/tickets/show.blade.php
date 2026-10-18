@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.helpdesk')
 
 @section('content')
 
@@ -65,7 +65,7 @@
 
             <p>
                 <strong>Categoria:</strong>
-                {{ $ticket->category ?? 'Não informada' }}
+                {{ $ticket->category_Label ?? 'Não informada' }}
             </p>
 
             <p>

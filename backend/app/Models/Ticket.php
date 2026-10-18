@@ -35,4 +35,18 @@ class Ticket extends Model
             default => $this->status,
         };
     }
+
+    public function getCategoryLabelAttribute(): string
+    {
+        return match ($this->category) {
+            'hardware' => 'Hardware',
+            'software' => 'Software',
+            'network' => 'Rede',
+            'access' => 'Acesso e Permissões',
+            'other' => 'Outro',
+            null => 'Não definida',
+            default => $this->category,
+        };
+    }
+
 }
