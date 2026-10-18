@@ -9,7 +9,10 @@ class TicketController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Ticket::query();
+        $query = Ticket::where(
+            'user_id',
+            auth()->id()
+        );
 
         if ($request->filled('q')) {
             $query->where(
@@ -52,6 +55,8 @@ class TicketController extends Controller
             'category' => ['nullable', 'string', 'max:100'],
             'priority' => ['required', 'in:low,medium,high,critical'],
         ]);
+
+        $validated['user_id'] = auth()->id();
 
         Ticket::create($validated);
 

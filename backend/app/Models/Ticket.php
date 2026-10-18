@@ -3,16 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Ticket extends Model
 {
     protected $fillable = [
+        'user_id',
         'title',
         'description',
         'category',
         'priority',
         'status',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function getPriorityLabelAttribute(): string
     {
