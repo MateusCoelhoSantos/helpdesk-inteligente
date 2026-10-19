@@ -26,37 +26,55 @@
 
                         <div class="bg-gray-100 rounded-lg p-4">
 
-                            <h3 class="text-sm text-gray-500">
-                                Total de Chamados
-                            </h3>
+                            <a
+                                href="{{ route('tickets.index') }}"
+                                class="block bg-gray-100 rounded-lg p-4 hover:bg-gray-200 transition">
 
-                            <p class="text-3xl font-bold text-blue-600">
-                                {{ $totalTickets }}
-                            </p>
+                                <h3 class="text-sm text-gray-500">
+                                    Total de Chamados
+                                </h3>
 
-                        </div>
+                                <p class="text-3xl font-bold">
+                                    {{ $totalTickets }}
+                                </p>
 
-                        <div class="bg-gray-100 rounded-lg p-4">
-
-                            <h3 class="text-sm text-gray-500">
-                                Chamados Abertos
-                            </h3>
-
-                            <p class="text-3xl font-bold text-red-600">
-                                {{ $openTickets }}
-                            </p>
+                            </a>
 
                         </div>
 
                         <div class="bg-gray-100 rounded-lg p-4">
 
-                            <h3 class="text-sm text-gray-500">
-                                Chamados Resolvidos
-                            </h3>
+                            <a
+                                href="{{ route('tickets.index', ['status' => 'open']) }}"
+                                class="block bg-gray-100 rounded-lg p-4 hover:bg-gray-200 transition">
 
-                            <p class="text-3xl font-bold text-green-600">
-                                {{ $resolvedTickets }}
-                            </p>
+                                <h3 class="text-sm text-gray-500">
+                                    Chamados Abertos
+                                </h3>
+
+                                <p class="text-3xl font-bold text-red-600">
+                                    {{ $openTickets }}
+                                </p>
+
+                            </a>
+
+                        </div>
+
+                        <div class="bg-gray-100 rounded-lg p-4">
+
+                            <a
+                                href="{{ route('tickets.index', ['status' => 'resolved']) }}"
+                                class="block bg-gray-100 rounded-lg p-4 hover:bg-gray-200 transition">
+
+                                <h3 class="text-sm text-gray-500">
+                                    Chamados Resolvidos
+                                </h3>
+
+                                <p class="text-3xl font-bold text-green-600">
+                                    {{ $resolvedTickets }}
+                                </p>
+
+                            </a>
 
                         </div>
 
