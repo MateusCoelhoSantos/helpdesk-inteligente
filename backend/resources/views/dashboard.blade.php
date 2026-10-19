@@ -22,61 +22,81 @@
                         Gerencie seus chamados de suporte através do HelpDesk Inteligente.
                     </p>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <h2 class="text-lg font-semibold mb-4">
+                        Resumo dos Chamados
+                    </h2>
 
-                        <div class="bg-gray-100 rounded-lg p-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
 
-                            <a
-                                href="{{ route('tickets.index') }}"
-                                class="block bg-gray-100 rounded-lg p-4 hover:bg-gray-200 transition">
+                        <a
+                            href="{{ route('tickets.index') }}"
+                            class="block bg-slate-50 rounded-xl shadow-sm border p-5 hover:shadow-md hover:bg-slate-100 transition">
 
-                                <h3 class="text-sm text-gray-500">
-                                    Total de Chamados
-                                </h3>
+                            <h3 class="text-sm text-gray-500">
+                                Total de Chamados
+                            </h3>
 
-                                <p class="text-3xl font-bold">
-                                    {{ $totalTickets }}
-                                </p>
+                            <p class="text-3xl font-bold mt-2">
+                                {{ $totalTickets }}
+                            </p>
 
-                            </a>
+                        </a>
 
-                        </div>
+                        <a
+                            href="{{ route('tickets.index', ['status' => 'open']) }}"
+                            class="block bg-slate-50 rounded-xl shadow-sm border p-5 hover:shadow-md hover:bg-slate-100 transition">
 
-                        <div class="bg-gray-100 rounded-lg p-4">
+                            <h3 class="text-sm text-gray-500">
+                                Abertos
+                            </h3>
 
-                            <a
-                                href="{{ route('tickets.index', ['status' => 'open']) }}"
-                                class="block bg-gray-100 rounded-lg p-4 hover:bg-gray-200 transition">
+                            <p class="text-3xl font-bold text-red-600 mt-2">
+                                {{ $openTickets }}
+                            </p>
 
-                                <h3 class="text-sm text-gray-500">
-                                    Chamados Abertos
-                                </h3>
+                        </a>
 
-                                <p class="text-3xl font-bold text-red-600">
-                                    {{ $openTickets }}
-                                </p>
+                        <a
+                            href="{{ route('tickets.index', ['status' => 'in_progress']) }}"
+                            class="block bg-slate-50 rounded-xl shadow-sm border p-5 hover:shadow-md hover:bg-slate-100 transition">
 
-                            </a>
+                            <h3 class="text-sm text-gray-500">
+                                Em Andamento
+                            </h3>
 
-                        </div>
+                            <p class="text-3xl font-bold mt-2">
+                                {{ $inProgressTickets }}
+                            </p>
 
-                        <div class="bg-gray-100 rounded-lg p-4">
+                        </a>
+                    
+                        <a
+                            href="{{ route('tickets.index', ['status' => 'waiting']) }}"
+                            class="block bg-slate-50 rounded-xl shadow-sm border p-5 hover:shadow-md hover:bg-slate-100 transition">
 
-                            <a
-                                href="{{ route('tickets.index', ['status' => 'resolved']) }}"
-                                class="block bg-gray-100 rounded-lg p-4 hover:bg-gray-200 transition">
+                            <h3 class="text-sm text-gray-500">
+                                Aguardando
+                            </h3>
 
-                                <h3 class="text-sm text-gray-500">
-                                    Chamados Resolvidos
-                                </h3>
+                            <p class="text-3xl font-bold mt-2">
+                                {{ $waitingTickets }}
+                            </p>
 
-                                <p class="text-3xl font-bold text-green-600">
-                                    {{ $resolvedTickets }}
-                                </p>
+                        </a>
 
-                            </a>
+                        <a
+                            href="{{ route('tickets.index', ['status' => 'resolved']) }}"
+                            class="block bg-slate-50 rounded-xl shadow-sm border p-5 hover:shadow-md hover:bg-slate-100 transition">
 
-                        </div>
+                            <h3 class="text-sm text-gray-500">
+                                Resolvidos
+                            </h3>
+
+                            <p class="text-3xl font-bold text-green-600 mt-2">
+                                {{ $resolvedTickets }}
+                            </p>
+
+                        </a>
 
                     </div>
 
@@ -116,6 +136,14 @@
                                             <p class="text-sm text-gray-500">
                                                 Categoria: {{ $ticket->category_label }}
                                             </p>
+
+                                            @if(auth()->user()->isAdmin())
+
+                                                <p class="text-sm text-gray-500">
+                                                    Aberto por: {{ $ticket->user?->name ?? 'Usuário não identificado' }}
+                                                </p>
+
+                                            @endif
 
                                         </div>
 

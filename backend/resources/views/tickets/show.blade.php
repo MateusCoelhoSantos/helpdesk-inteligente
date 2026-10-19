@@ -88,6 +88,18 @@
                 {{ $ticket->updated_at->format('d/m/Y H:i') }}
             </p>
 
+            @if(auth()->user()->isAdmin())
+
+                <div class="mb-3">
+
+                    <strong>Aberto por:</strong>
+
+                    {{ $ticket->user?->name ?? 'Usuário não identificado' }}
+
+                </div>
+
+            @endif
+
         </div>
     </div>
 

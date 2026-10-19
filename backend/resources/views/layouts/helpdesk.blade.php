@@ -15,9 +15,21 @@
     <nav class="navbar navbar-dark bg-dark">
         <div class="container">
 
-            <a class="navbar-brand" href="{{ route('tickets.index') }}">
-                HelpDesk Inteligente
-            </a>
+            <div class="d-flex gap-3">
+
+                <a
+                    href="{{ route('dashboard') }}"
+                    class="text-white text-decoration-none">
+                    Dashboard
+                </a>
+
+                <a
+                    href="{{ route('tickets.index') }}"
+                    class="text-white text-decoration-none">
+                    Chamados
+                </a>
+
+            </div>
 
             @auth
                 <div class="d-flex align-items-center gap-3">

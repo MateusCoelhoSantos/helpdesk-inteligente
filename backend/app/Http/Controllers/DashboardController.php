@@ -8,40 +8,40 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $userId = auth()->id();
+        $user = auth()->user();
 
-        $totalTickets = Ticket::where(
-            'user_id',
-            $userId
-        )->count();
+        $query = $user->isAdmin()
+            ? Ticket::query()
+            : Ticket::where('user_id', $user->id);
 
-        $openTickets = Ticket::where(
-            'user_id',
-            $userId
-        )->where(
-            'status',
-            'open'
-        )->count();
+        $totalTickets = (clone $query)->count();
 
-        $resolvedTickets = Ticket::where(
-            'user_id',
-            $userId
-        )->where(
-            'status',
-            'resolved'
-        )->count();
+        $openTickets = (clone $query)
+            ->where('status', 'open')
+            ->count();
 
-        $recentTickets = Ticket::where(
-            'user_id',
-            $userId
-        )
-        ->latest()
-        ->take(5)
-        ->get();
+        $inProgressTickets = (clone $query)
+            ->where('status', 'in_progress')
+            ->count();
+
+        $waitingTickets = (clone $query)
+            ->where('status', 'waiting')
+            ->count();
+
+        $resolvedTickets = (clone $query)
+            ->where('status', 'resolved')
+            ->count();
+
+        $recentTickets = (clone $query)
+            ->latest()
+            ->take(5)
+            ->get();
 
         return view('dashboard', compact(
             'totalTickets',
             'openTickets',
+            'inProgressTickets',
+            'waitingTickets',
             'resolvedTickets',
             'recentTickets'
         ));

@@ -204,6 +204,17 @@
                             <small class="text-secondary">
                                 Categoria: {{ $ticket->category_label }}
                             </small>
+
+                            @if(auth()->user()->isAdmin())
+
+                                <br>
+
+                                <small class="text-secondary">
+                                    Aberto por:
+                                    {{ $ticket->user?->name ?? 'Usuário não identificado' }}
+                                </small>
+
+                            @endif
                         </div>
 
                         <div class="text-md-end">

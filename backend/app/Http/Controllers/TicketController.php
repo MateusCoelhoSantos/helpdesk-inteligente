@@ -9,10 +9,18 @@ class TicketController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Ticket::where(
-            'user_id',
-            auth()->id()
-        );
+        if (auth()->user()->isAdmin()) {
+
+            $query = Ticket::query();
+
+        } else {
+
+            $query = Ticket::where(
+                'user_id',
+                auth()->id()
+            );
+
+        }
 
         if ($request->filled('q')) {
             $query->where(
