@@ -194,6 +194,14 @@
 
                                         @endif
 
+                                        @if($ticket->assignedUser)
+
+                                            <p class="small text-muted">
+                                                Responsável: {{ $ticket->assignedUser->name }}
+                                            </p>
+
+                                        @endif
+
                                     </div>
 
                                     <span class="text-sm text-gray-600">
