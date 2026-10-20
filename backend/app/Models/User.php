@@ -45,4 +45,26 @@ class User extends Authenticatable
     {
         return $this->role === 'user';
     }
+    
+    public function getRoleLabelAttribute(): string
+    {
+        return match ($this->role) {
+
+            'admin' => 'Administrador',
+
+            'user' => 'Usuário',
+
+            default => $this->role,
+
+        };
+    }
+
+    public function assignedTickets()
+    {
+        return $this->hasMany(
+            Ticket::class,
+            'assigned_to'
+        );
+    }
+
 }

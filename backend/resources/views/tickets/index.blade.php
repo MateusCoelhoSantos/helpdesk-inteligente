@@ -215,6 +215,16 @@
                                 </small>
 
                             @endif
+
+                            @if($ticket->assignedUser)
+
+                                <small class="text-secondary d-block">
+                                    Responsável:
+                                    {{ $ticket->assignedUser->name }}
+                                </small>
+
+                            @endif
+                            
                         </div>
 
                         <div class="text-md-end">

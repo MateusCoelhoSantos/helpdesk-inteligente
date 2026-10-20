@@ -34,9 +34,17 @@
             @auth
                 <div class="d-flex align-items-center gap-3">
 
-                    <span class="text-white">
-                        {{ auth()->user()->name }}
-                    </span>
+                    <div class="d-flex flex-column align-items-end">
+
+                        <span class="text-white">
+                            {{ auth()->user()->name }}
+                        </span>
+
+                        <small class="text-light">
+                            {{ auth()->user()->role_label }}
+                        </small>
+
+                    </div>
 
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

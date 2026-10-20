@@ -80,7 +80,12 @@ class TicketController extends Controller
 
     public function edit(Ticket $ticket)
     {
-        return view('tickets.edit', compact('ticket'));
+        $users = \App\Models\User::orderBy('name')->get();
+
+        return view(
+            'tickets.edit',
+            compact('ticket', 'users')
+        );
     }
 
     public function update(Request $request, Ticket $ticket)
@@ -91,14 +96,20 @@ class TicketController extends Controller
             'category' => ['nullable', 'string', 'max:100'],
             'priority' => ['required', 'in:low,medium,high,critical'],
             'status' => ['required', 'in:open,in_progress,waiting,resolved'],
+            'assigned_to' => ['nullable', 'exists:users,id'],
         ]);
 
         $ticket->update($validated);
+
+        if (!auth()->user()->isAdmin()) {
+            unset($validated['assigned_to']);
+        }
 
         return redirect()
             ->route('tickets.show', $ticket)
             ->with('success', 'Chamado atualizado com sucesso!');
     }
+
     public function destroy(Ticket $ticket)
     {
         $ticket->delete();

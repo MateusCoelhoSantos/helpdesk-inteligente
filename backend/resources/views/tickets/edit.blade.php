@@ -185,6 +185,48 @@
 
             </div>
 
+            @if(auth()->user()->isAdmin())
+
+                <div class="mb-3">
+
+                    <label
+                        for="assigned_to"
+                        class="form-label">
+
+                        Responsável
+
+                    </label>
+
+                    <select
+                        name="assigned_to"
+                        id="assigned_to"
+                        class="form-select">
+
+                        <option value="">
+                            Não atribuído
+                        </option>
+
+                        @foreach($users as $user)
+
+                            <option
+                                value="{{ $user->id }}"
+                                @selected(
+                                    old('assigned_to', $ticket->assigned_to)
+                                    == $user->id
+                                )>
+
+                                {{ $user->name }}
+
+                            </option>
+
+                        @endforeach
+
+                    </select>
+
+                </div>
+
+            @endif
+
             <div class="d-flex gap-2">
 
                 <button type="submit"

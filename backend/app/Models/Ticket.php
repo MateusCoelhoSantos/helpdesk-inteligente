@@ -8,12 +8,13 @@ use App\Models\User;
 class Ticket extends Model
 {
     protected $fillable = [
-        'user_id',
         'title',
         'description',
         'category',
         'priority',
         'status',
+        'user_id',
+        'assigned_to',
     ];
 
     public function user()
@@ -54,6 +55,14 @@ class Ticket extends Model
             null => 'Não definida',
             default => $this->category,
         };
+    }
+
+    public function assignedUser()
+    {
+        return $this->belongsTo(
+            User::class,
+            'assigned_to'
+        );
     }
 
 }

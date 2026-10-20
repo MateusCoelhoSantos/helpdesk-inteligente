@@ -99,6 +99,22 @@
                 </div>
 
             @endif
+            
+            @if ($ticket->assignedUser)
+
+                <div class="mb-3">
+                    <strong>Responsável:</strong>
+                    {{ $ticket->assignedUser->name }}
+                </div>
+
+            @else
+
+                <div class="mb-3">
+                    <strong>Responsável:</strong>
+                    Não atribuído
+                </div>
+
+            @endif
 
         </div>
     </div>
