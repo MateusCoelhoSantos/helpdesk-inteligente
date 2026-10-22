@@ -64,5 +64,10 @@ class Ticket extends Model
             'assigned_to'
         );
     }
+    public function histories()
+    {
+        return $this->hasMany(TicketHistory::class)
+            ->latest();
+    }
 
 }

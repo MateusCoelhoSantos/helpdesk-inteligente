@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket;
 use Illuminate\Http\Request;
+use App\Models\TicketHistory;
 
 class TicketController extends Controller
 {
@@ -66,7 +67,13 @@ class TicketController extends Controller
 
         $validated['user_id'] = auth()->id();
 
-        Ticket::create($validated);
+        $ticket = Ticket::create($validated);
+
+        $this->addHistory(
+            $ticket,
+            'created',
+            'Chamado criado'
+        );
 
         return redirect()
             ->route('tickets.index')
@@ -99,10 +106,47 @@ class TicketController extends Controller
             'assigned_to' => ['nullable', 'exists:users,id'],
         ]);
 
-        $ticket->update($validated);
-
         if (!auth()->user()->isAdmin()) {
             unset($validated['assigned_to']);
+        }
+
+        $statusAntigo = $ticket->status;
+        $prioridadeAntiga = $ticket->priority;
+        $ResponsavelAntigo = $ticket->assigned_to;
+        $categoryAntigo = $ticket->category;
+
+        $ticket->update($validated);
+
+        if ($statusAntigo !== $ticket->status) {
+            $this->addHistory(
+                $ticket,
+                'status_changed',
+                "Status alterado de {$statusAntigo} para {$ticket->status}"
+            );
+        }
+
+        if ($prioridadeAntiga !== $ticket->priority) {
+            $this->addHistory(
+                $ticket,
+                'priority_changed',
+                "Prioridade alterada de {$prioridadeAntiga} para {$ticket->priority}"
+            );
+        }
+
+        if ($ResponsavelAntigo !== $ticket->assigned_to) {
+            $this->addHistory(
+                $ticket,
+                'assigned_to_changed',
+                "Responsável alterado de {$ResponsavelAntigo} para {$ticket->assigned_to}"
+            );
+        }
+
+        if ($categoryAntigo !== $ticket->category) {
+            $this->addHistory(
+                $ticket,
+                'category_changed',
+                "Categoria alterada de {$categoryAntigo} para {$ticket->category}"
+            );
         }
 
         return redirect()
@@ -117,5 +161,18 @@ class TicketController extends Controller
         return redirect()
             ->route('tickets.index')
             ->with('success', 'Chamado excluído com sucesso!');
+    }
+
+    private function addHistory(
+        Ticket $ticket,
+        string $action,
+        string $description
+    ): void {
+        TicketHistory::create([
+            'ticket_id' => $ticket->id,
+            'user_id' => auth()->id(),
+            'action' => $action,
+            'description' => $description,
+        ]);
     }
 }
