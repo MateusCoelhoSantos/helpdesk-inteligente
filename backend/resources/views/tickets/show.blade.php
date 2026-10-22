@@ -119,5 +119,37 @@
         </div>
     </div>
 
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="mb-0">Histórico</h5>
+        </div>
+
+        <div class="card-body">
+
+            @forelse($ticket->histories as $history)
+
+                <div class="border-start border-primary ps-3 mb-4">
+
+                    <div class="fw-bold">
+                        {{ $history->description }}
+                    </div>
+
+                    <small class="text-muted">
+                        {{ $history->created_at->format('d/m/Y H:i') }}
+                    </small>
+
+                </div>
+
+            @empty
+
+                <p class="text-muted mb-0">
+                    Nenhum histórico registrado.
+                </p>
+
+            @endforelse
+
+        </div>
+    </div>
 </div>
+
 @endsection

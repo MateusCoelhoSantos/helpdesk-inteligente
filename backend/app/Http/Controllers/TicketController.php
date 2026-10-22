@@ -9,6 +9,41 @@ use App\Models\User;
 
 class TicketController extends Controller
 {
+    private function translateStatus(string $status): string
+    {
+        return match ($status) {
+            'open' => 'Aberto',
+            'in_progress' => 'Em andamento',
+            'waiting' => 'Aguardando',
+            'resolved' => 'Resolvido',
+            default => $status,
+        };
+    }
+
+    private function translatePriority(string $priority): string
+    {
+        return match ($priority) {
+            'low' => 'Baixa',
+            'medium' => 'Média',
+            'high' => 'Alta',
+            'critical' => 'Crítica',
+            default => $priority,
+        };
+    }
+
+    private function translateCategory(?string $category): string
+    {
+        return match ($category) {
+            'hardware' => 'Hardware',
+            'software' => 'Software',
+            'network' => 'Rede',
+            'access' => 'Acesso e Permissões',
+            'other' => 'Outro',
+            null => 'Não definida',
+            default => $category,
+        };
+    }
+
     public function index(Request $request)
     {
         if (auth()->user()->isAdmin()) {
@@ -83,6 +118,12 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket)
     {
+        $ticket->load([
+            'histories.user',
+            'assignedUser',
+            'user',
+        ]);
+
         return view('tickets.show', compact('ticket'));
     }
 
@@ -118,9 +159,9 @@ class TicketController extends Controller
 
         $ticket->update($validated);
 
-        if ($responsavelAntigo != $ticket->assigned_to) {
+        $usuarioAtual = auth()->user()->name;
 
-            $usuarioAtual = auth()->user()->name;
+        if ($responsavelAntigo != $ticket->assigned_to) {
 
             if (is_null($responsavelAntigo) && $ticket->assignedUser) {
 
@@ -154,7 +195,7 @@ class TicketController extends Controller
             $this->addHistory(
                 $ticket,
                 'status_changed',
-                "Status alterado de {$statusAntigo} para {$ticket->status}"
+                "{$usuarioAtual} alterou o status de ". $this->translateStatus($statusAntigo). " para ". $this->translateStatus($ticket->status)
             );
         }
 
@@ -162,7 +203,7 @@ class TicketController extends Controller
             $this->addHistory(
                 $ticket,
                 'priority_changed',
-                "Prioridade alterada de {$prioridadeAntiga} para {$ticket->priority}"
+                "{$usuarioAtual} alterou a prioridade de " . $this->translatePriority($prioridadeAntiga) . " para " . $this->translatePriority($ticket->priority)
             );
         }
 
@@ -170,7 +211,7 @@ class TicketController extends Controller
             $this->addHistory(
                 $ticket,
                 'category_changed',
-                "Categoria alterada de {$categoryAntigo} para {$ticket->category}"
+                "{$usuarioAtual} alterou a categoria de " . $this->translateCategory($categoryAntigo) . " para " . $this->translateCategory($ticket->category)
             );
         }
 
