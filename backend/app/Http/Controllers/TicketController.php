@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Models\TicketHistory;
+use App\Models\User;
 
 class TicketController extends Controller
 {
@@ -112,10 +113,42 @@ class TicketController extends Controller
 
         $statusAntigo = $ticket->status;
         $prioridadeAntiga = $ticket->priority;
-        $ResponsavelAntigo = $ticket->assigned_to;
+        $responsavelAntigo = $ticket->assigned_to;
         $categoryAntigo = $ticket->category;
 
         $ticket->update($validated);
+
+        if ($responsavelAntigo != $ticket->assigned_to) {
+
+            $usuarioAtual = auth()->user()->name;
+
+            if (is_null($responsavelAntigo) && $ticket->assignedUser) {
+
+                $this->addHistory(
+                    $ticket,
+                    'assigned',
+                    "{$usuarioAtual} atribuiu o chamado para {$ticket->assignedUser->name}"
+                );
+
+            } elseif (!is_null($responsavelAntigo) && is_null($ticket->assigned_to)) {
+
+                $this->addHistory(
+                    $ticket,
+                    'unassigned',
+                    "{$usuarioAtual} removeu o responsável do chamado"
+                );
+
+            } else {
+
+                $responsavelAnterior = User::find($responsavelAntigo);
+
+                $this->addHistory(
+                    $ticket,
+                    'reassigned',
+                    "{$usuarioAtual} alterou o responsável de {$responsavelAnterior->name} para {$ticket->assignedUser->name}"
+                );
+            }
+        }
 
         if ($statusAntigo !== $ticket->status) {
             $this->addHistory(
@@ -130,14 +163,6 @@ class TicketController extends Controller
                 $ticket,
                 'priority_changed',
                 "Prioridade alterada de {$prioridadeAntiga} para {$ticket->priority}"
-            );
-        }
-
-        if ($ResponsavelAntigo !== $ticket->assigned_to) {
-            $this->addHistory(
-                $ticket,
-                'assigned_to_changed',
-                "Responsável alterado de {$ResponsavelAntigo} para {$ticket->assigned_to}"
             );
         }
 
