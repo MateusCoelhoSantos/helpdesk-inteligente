@@ -32,6 +32,66 @@
             </div>
 
             @auth
+
+                <li class="nav-item dropdown">
+
+                    <a
+                        class="nav-link dropdown-toggle"
+                        href="#"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                    >
+                        🔔
+
+                        @if($unreadNotifications > 0)
+
+                            <span class="badge bg-danger">
+                                {{ $unreadNotifications }}
+                            </span>
+
+                        @endif
+
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end">
+
+                        @forelse($notifications as $notification)
+
+                            <li>
+
+                                <a
+                                    class="dropdown-item"
+                                    href="{{ $notification->url }}"
+                                >
+
+                                    <strong>
+                                        {{ $notification->title }}
+                                    </strong>
+
+                                    <br>
+
+                                    <small>
+                                        {{ $notification->message }}
+                                    </small>
+
+                                </a>
+
+                            </li>
+
+                        @empty
+
+                            <li>
+                                <span class="dropdown-item-text">
+                                    Nenhuma notificação
+                                </span>
+                            </li>
+
+                        @endforelse
+
+                    </ul>
+
+                </li>
+                
                 <div class="d-flex align-items-center gap-3">
 
                     <div class="d-flex flex-column align-items-end">

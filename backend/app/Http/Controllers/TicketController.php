@@ -7,9 +7,25 @@ use Illuminate\Http\Request;
 use App\Models\TicketHistory;
 use App\Models\User;
 use App\Models\TicketAttachment;
+use App\Models\Notification;
 
 class TicketController extends Controller
 {
+    private function createNotification(
+        int $userId,
+        string $title,
+        string $message,
+        string $url
+    ): void {
+
+        Notification::create([
+            'user_id' => $userId,
+            'title' => $title,
+            'message' => $message,
+            'url' => $url,
+        ]);
+    }
+
     private function translateStatus(string $status): string
     {
         return match ($status) {
@@ -222,6 +238,13 @@ class TicketController extends Controller
                     "{$usuarioAtual} removeu o responsável do chamado"
                 );
 
+                $this->createNotification(
+                    $ticket->assigned_to,
+                    'Chamado atribuído',
+                    auth()->user()->name . ' atribuiu um chamado para você.',
+                    route('tickets.show', $ticket)
+                );
+
             } else {
 
                 $responsavelAnterior = User::find($responsavelAntigo);
@@ -230,6 +253,13 @@ class TicketController extends Controller
                     $ticket,
                     'reassigned',
                     "{$usuarioAtual} alterou o responsável de {$responsavelAnterior->name} para {$ticket->assignedUser->name}"
+                );
+
+                $this->createNotification(
+                    $ticket->assigned_to,
+                    'Chamado atribuído',
+                    auth()->user()->name . ' transferiu um chamado para você.',
+                    route('tickets.show', $ticket)
                 );
             }
         }
@@ -240,6 +270,31 @@ class TicketController extends Controller
                 'status_changed',
                 "{$usuarioAtual} alterou o status de ". $this->translateStatus($statusAntigo). " para ". $this->translateStatus($ticket->status)
             );
+
+            if ($ticket->user_id !== auth()->id()) {
+
+                Notification::create([
+                    'user_id' => $ticket->user_id,
+                    'title' => 'Status alterado',
+                    'message' => 'O status do chamado "' .
+                        $ticket->title .
+                        '" foi atualizado para ' .
+                        $ticket->status_label,
+                    'type' => 'info',
+                    'url' => route('tickets.show', $ticket),
+                ]);
+            }
+
+            if ($ticket->status === 'resolved') {
+
+                Notification::create([
+                    'user_id' => $ticket->user_id,
+                    'title' => 'Chamado resolvido',
+                    'message' => 'Seu chamado foi marcado como resolvido.',
+                    'type' => 'success',
+                    'url' => route('tickets.show', $ticket),
+                ]);
+            }
         }
 
         if ($prioridadeAntiga !== $ticket->priority) {
