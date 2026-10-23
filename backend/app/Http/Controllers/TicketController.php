@@ -52,10 +52,10 @@ class TicketController extends Controller
 
         } else {
 
-            $query = Ticket::where(
-                'user_id',
-                auth()->id()
-            );
+            $query = Ticket::where(function ($query) {
+                $query->where('user_id', auth()->id())
+                    ->orWhere('assigned_to', auth()->id());
+            });
 
         }
 
@@ -120,6 +120,7 @@ class TicketController extends Controller
     {
         $ticket->load([
             'histories.user',
+            'comments.user',
             'assignedUser',
             'user',
         ]);

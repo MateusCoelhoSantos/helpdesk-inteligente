@@ -121,35 +121,168 @@
 
     <div class="card mt-4">
         <div class="card-header">
-            <h5 class="mb-0">Histórico</h5>
+            <h5 class="mb-0">Comentários</h5>
         </div>
 
         <div class="card-body">
 
-            @forelse($ticket->histories as $history)
+            @forelse($ticket->comments as $comment)
 
-                <div class="border-start border-primary ps-3 mb-4">
+                <div class="border rounded p-3 mb-3">
 
                     <div class="fw-bold">
-                        {{ $history->description }}
+                        {{ $comment->user->name }}
+
+                        @if($comment->user_id === auth()->id())
+                            <span class="badge bg-primary ms-2">
+                                Você
+                            </span>
+                        @endif
                     </div>
 
                     <small class="text-muted">
-                        {{ $history->created_at->format('d/m/Y H:i') }}
+                        {{ $comment->created_at->format('d/m/Y H:i') }}
                     </small>
+
+                    <div class="mt-2">
+                        {{ $comment->message }}
+                    </div>
 
                 </div>
 
             @empty
 
-                <p class="text-muted mb-0">
-                    Nenhum histórico registrado.
+                <p class="text-muted">
+                    Nenhum comentário registrado.
                 </p>
 
             @endforelse
 
         </div>
     </div>
+
+    <form
+        action="{{ route('tickets.comments.store', $ticket) }}"
+        method="POST"
+    >
+        @csrf
+
+        <div class="mb-3">
+            <label class="form-label">
+                Novo comentário
+            </label>
+
+            <textarea
+                name="message"
+                class="form-control"
+                rows="4"
+                required
+            ></textarea>
+        </div>
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+            Adicionar comentário
+        </button>
+    </form>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="mb-0">Histórico</h5>
+        </div>
+
+        <div class="card-body">
+
+            <div class="timeline">
+
+                @forelse($ticket->histories as $history)
+
+                    <div class="timeline-item">
+
+                        @php
+                            $icon = match($history->action) {
+                                'created' => '🟢',
+                                'assigned' => '👤',
+                                'reassigned' => '🔄',
+                                'unassigned' => '❌',
+                                'status_changed' => '📌',
+                                'priority_changed' => '⚠️',
+                                'category_changed' => '📁',
+                                'commented' => '💬',
+                                default => '•',
+                            };
+                        @endphp
+
+                        <div class="fw-semibold">
+                            {{ $icon }} {{ $history->description }}
+                        </div>
+
+                        <div class="timeline-date">
+                            {{ $history->created_at->format('d/m/Y H:i') }}
+                        </div>
+
+                    </div>
+
+                @empty
+
+                    <p class="text-muted">
+                        Nenhum histórico registrado.
+                    </p>
+
+                @endforelse
+
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+.timeline {
+    position: relative;
+    margin-left: 20px;
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 30px;
+    padding-bottom: 25px;
+}
+
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    background: #0d6efd;
+    border-radius: 50%;
+}
+
+.timeline-item::after {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 18px;
+    width: 2px;
+    height: 100%;
+    background: #dee2e6;
+}
+
+.timeline-item:last-child::after {
+    display: none;
+}
+
+.timeline-date {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+</style>
 
 @endsection
