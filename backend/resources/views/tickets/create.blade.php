@@ -16,7 +16,7 @@
 
     <div class="card border-0 shadow-sm">
         <div class="card-body p-4">
-            <form action="{{ route('tickets.store') }}" method="POST">
+            <form enctype="multipart/form-data" action="{{ route('tickets.store') }}" method="POST">
                 @csrf
 
                 <div class="mb-3">
@@ -86,6 +86,20 @@
                     @error('priority')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Anexos
+                    </label>
+
+                    <input
+                        type="file"
+                        name="attachments[]"
+                        class="form-control"
+                        multiple
+                        accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+                    >
                 </div>
 
                 <div class="d-flex gap-2">

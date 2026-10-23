@@ -121,6 +121,42 @@
 
     <div class="card mt-4">
         <div class="card-header">
+            <h5 class="mb-0">Anexos</h5>
+        </div>
+
+        <div class="card-body">
+
+            @forelse($ticket->attachments as $attachment)
+
+                <div class="mb-2">
+
+                    <a
+                        href="{{ asset('storage/' . $attachment->file_path) }}"
+                        target="_blank"
+                        class="text-decoration-none"
+                    >
+                        📎 {{ $attachment->original_name }}
+                    </a>
+
+                    <small class="text-muted ms-2">
+                        enviado por {{ $attachment->user->name }}
+                    </small>
+
+                </div>
+
+            @empty
+
+                <p class="text-muted mb-0">
+                    Nenhum anexo foi enviado.
+                </p>
+
+            @endforelse
+
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
             <h5 class="mb-0">Comentários</h5>
         </div>
 
@@ -148,6 +184,29 @@
                         {{ $comment->message }}
                     </div>
 
+                    @if($comment->attachments->count())
+
+                        <div class="mt-3">
+
+                            @foreach($comment->attachments as $attachment)
+
+                                <div>
+
+                                    <a
+                                        href="{{ asset('storage/' . $attachment->file_path) }}"
+                                        target="_blank"
+                                    >
+                                        📎 {{ $attachment->original_name }}
+                                    </a>
+
+                                </div>
+
+                            @endforeach
+
+                        </div>
+
+                    @endif
+
                 </div>
 
             @empty
@@ -162,6 +221,7 @@
     </div>
 
     <form
+        enctype="multipart/form-data"
         action="{{ route('tickets.comments.store', $ticket) }}"
         method="POST"
     >
@@ -178,6 +238,20 @@
                 rows="4"
                 required
             ></textarea>
+
+            <div class="mt-3">
+                <label class="form-label">
+                    Anexos (opcional)
+                </label>
+
+                <input
+                    type="file"
+                    name="attachments[]"
+                    class="form-control"
+                    multiple
+                    accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+                >
+            </div>
         </div>
 
         <button
@@ -211,6 +285,7 @@
                                 'priority_changed' => '⚠️',
                                 'category_changed' => '📁',
                                 'commented' => '💬',
+                                'attachment_added' => '📎',
                                 default => '•',
                             };
                         @endphp

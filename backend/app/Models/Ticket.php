@@ -76,4 +76,11 @@ class Ticket extends Model
             ->oldest();
     }
 
+    public function attachments()
+    {
+        return $this->hasMany(TicketAttachment::class)
+            ->whereNull('comment_id')
+            ->latest();
+    }
+
 }

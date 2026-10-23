@@ -6,6 +6,7 @@ use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Models\TicketHistory;
 use App\Models\User;
+use App\Models\TicketAttachment;
 
 class TicketController extends Controller
 {
@@ -99,11 +100,50 @@ class TicketController extends Controller
             'description' => ['required', 'string'],
             'category' => ['nullable', 'string', 'max:100'],
             'priority' => ['required', 'in:low,medium,high,critical'],
+
+            'attachments' => ['nullable', 'array'],
+            'attachments.*' => [
+                'file',
+                'mimes:jpg,jpeg,png,pdf,doc,docx',
+                'max:5120',
+            ],
         ]);
 
         $validated['user_id'] = auth()->id();
 
         $ticket = Ticket::create($validated);
+
+        if ($request->hasFile('attachments')) {
+
+            foreach ($request->file('attachments') as $file) {
+
+                $path = $file->store(
+                    'attachments',
+                    'public'
+                );
+
+                TicketAttachment::create([
+                    'ticket_id' => $ticket->id,
+                    'user_id' => auth()->id(),
+                    'original_name' => $file->getClientOriginalName(),
+                    'file_path' => $path,
+                ]);
+            }
+        }
+
+        if ($request->hasFile('attachments')) {
+
+            $quantidade = count(
+                $request->file('attachments')
+            );
+
+            $this->addHistory(
+                $ticket,
+                'attachment_added',
+                auth()->user()->name .
+                " adicionou {$quantidade} anexo(s)"
+            );
+        }
 
         $this->addHistory(
             $ticket,
@@ -121,6 +161,8 @@ class TicketController extends Controller
         $ticket->load([
             'histories.user',
             'comments.user',
+            'comments.attachments',
+            'attachments.user',
             'assignedUser',
             'user',
         ]);

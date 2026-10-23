@@ -72,4 +72,9 @@ class User extends Authenticatable
         return $this->hasMany(TicketComment::class);
     }
 
+    public function attachments()
+    {
+        return $this->hasMany(TicketAttachment::class);
+    }
+
 }
