@@ -12,7 +12,10 @@ class DashboardController extends Controller
 
         $query = $user->isAdmin()
             ? Ticket::query()
-            : Ticket::where('user_id', $user->id);
+            : Ticket::where(function ($query) use ($user) {
+                $query->where('user_id', $user->id)
+                    ->orWhere('assigned_to', $user->id);
+            });
 
         $totalTickets = (clone $query)->count();
 
