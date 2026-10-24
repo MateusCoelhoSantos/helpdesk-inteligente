@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
 
             if (auth()->check()) {
 
-                $notifications = auth()->user()
+                $navbarNotifications = auth()->user()
                     ->notifications()
                     ->take(5)
                     ->get();
@@ -38,8 +38,8 @@ class AppServiceProvider extends ServiceProvider
                     ->count();
 
                 $view->with(
-                    'notifications',
-                    $notifications
+                    'navbarNotifications',
+                    $navbarNotifications
                 );
 
                 $view->with(

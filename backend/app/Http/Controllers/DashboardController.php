@@ -85,6 +85,44 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        $resolvedTicketsCollection = (clone $query)
+            ->whereNotNull('resolved_at')
+            ->get();
+
+        $averageResolutionMinutes = 0;
+
+        if ($resolvedTicketsCollection->count()) {
+
+            $averageResolutionMinutes = $resolvedTicketsCollection
+                ->avg(function ($ticket) {
+
+                    return $ticket->created_at
+                        ->diffInMinutes($ticket->resolved_at);
+
+                });
+        }
+
+        $averageResolutionHours = round(
+            $averageResolutionMinutes / 60,
+            1
+        );
+
+        $withinSla = (clone $query)
+            ->whereNotNull('resolved_at')
+            ->get()
+            ->filter(function ($ticket) {
+                return $ticket->sla_status === 'success';
+            })
+            ->count();
+
+        $outsideSla = (clone $query)
+            ->whereNotNull('resolved_at')
+            ->get()
+            ->filter(function ($ticket) {
+                return $ticket->sla_status === 'danger';
+            })
+            ->count();
+
         return view('dashboard', compact(
             'totalTickets',
             'openTickets',
@@ -97,6 +135,9 @@ class DashboardController extends Controller
             'statusChart',
             'categoriesChart',
             'attentionTickets',
+            'averageResolutionHours',
+            'withinSla',
+            'outsideSla',
             'recentTickets'
         ));
     }

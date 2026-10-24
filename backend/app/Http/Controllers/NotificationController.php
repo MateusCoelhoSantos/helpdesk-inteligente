@@ -18,4 +18,30 @@ class NotificationController extends Controller
 
         return redirect($notification->url);
     }
+
+    public function index()
+    {
+        $notifications = auth()
+            ->user()
+            ->notifications()
+            ->paginate(15);
+
+        return view(
+            'notifications.index',
+            compact('notifications')
+        );
+    }
+
+    public function markAllAsRead()
+    {
+        auth()
+            ->user()
+            ->notifications()
+            ->where('read', false)
+            ->update([
+                'read' => true,
+            ]);
+
+        return back();
+    }
 }

@@ -75,8 +75,30 @@
 
             <p>
                 <strong>Status:</strong>
-                {{ $ticket->status_label }}       
+                {{ $ticket->status_label }}
             </p>
+
+            @if($ticket->resolved_at)
+
+                <p>
+                    <strong>Resolvido em:</strong>
+                    {{ $ticket->resolved_at->format('d/m/Y H:i') }}
+                </p>
+
+                <p>
+                    <strong>Tempo de resolução:</strong>
+                    {{ $ticket->resolution_time }}
+                </p>
+
+                <p>
+                    <strong>SLA:</strong>
+
+                    <span class="badge bg-{{ $ticket->sla_status }}">
+                        {{ $ticket->sla_label }}
+                    </span>
+                </p>
+
+            @endif
 
             <p>
                 <strong>Criado em:</strong>

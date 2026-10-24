@@ -22,6 +22,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('tickets', TicketController::class);
     Route::post('/tickets/{ticket}/comments',[TicketCommentController::class, 'store'])->name('tickets.comments.store');
     Route::get('/notifications/{notification}',[NotificationController::class, 'show'])->name('notifications.show');
+    Route::get('/notifications',[NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/read-all',[NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
 });
 
 require __DIR__.'/auth.php';

@@ -54,7 +54,7 @@
 
                         <ul class="dropdown-menu dropdown-menu-end">
 
-                            @forelse($notifications as $notification)
+                            @forelse($navbarNotifications as $notification)
 
                                 <li>
 
@@ -91,6 +91,19 @@
                                 </li>
 
                             @endforelse
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <a
+                                    href="{{ route('notifications.index') }}"
+                                    class="dropdown-item text-center fw-bold"
+                                >
+                                    Ver todas
+                                </a>
+                            </li>
 
                         </ul>
 

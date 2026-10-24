@@ -189,6 +189,58 @@
                     </div>
                 </div>
 
+                <div class="col">
+
+                    <div class="card h-100 border-start border-4 border-success shadow-sm">
+
+                        <div class="card-body text-center">
+
+                            <h6 class="text-muted">
+                                SLA Médio
+                            </h6>
+
+                            <h2 class="display-6 fw-bold text-success mb-0">
+                                {{ $averageResolutionHours }}h
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col">
+                    <div class="card h-100 border-start border-4 border-success shadow-sm">
+                        <div class="card-body text-center">
+
+                            <h6 class="text-muted">
+                                Dentro do SLA
+                            </h6>
+
+                            <h2 class="display-6 fw-bold text-success">
+                                {{ $withinSla }}
+                            </h2>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100 border-start border-4 border-danger shadow-sm">
+                        <div class="card-body text-center">
+
+                            <h6 class="text-muted">
+                                Fora do SLA
+                            </h6>
+
+                            <h2 class="display-6 fw-bold text-danger">
+                                {{ $outsideSla }}
+                            </h2>
+
+                        </div>
+                    </div>
+                </div>
+
             </div>    
 
             <div class="row mt-4">

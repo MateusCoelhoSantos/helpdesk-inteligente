@@ -216,6 +216,22 @@ class TicketController extends Controller
         $responsavelAntigo = $ticket->assigned_to;
         $categoryAntigo = $ticket->category;
 
+        if (
+            isset($validated['status']) &&
+            $validated['status'] === 'resolved' &&
+            $ticket->status !== 'resolved'
+        ) {
+            $validated['resolved_at'] = now();
+        }
+
+        if (
+            isset($validated['status']) &&
+            $validated['status'] !== 'resolved'
+        ) {
+            $validated['resolved_at'] = null;
+        }
+
+
         $ticket->update($validated);
 
         $usuarioAtual = auth()->user()->name;

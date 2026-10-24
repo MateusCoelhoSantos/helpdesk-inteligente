@@ -13,9 +13,74 @@ class Ticket extends Model
         'category',
         'priority',
         'status',
+        'resolved_at',
         'user_id',
         'assigned_to',
     ];
+
+    protected $casts = [
+        'resolved_at' => 'datetime',
+    ];
+
+    public function getSlaLabelAttribute(): ?string
+    {
+        if (!$this->resolved_at) {
+            return null;
+        }
+
+        $minutes = $this->created_at
+            ->diffInMinutes($this->resolved_at);
+
+        if ($minutes <= 240) {
+            return 'Dentro do SLA';
+        }
+
+        if ($minutes <= 1440) {
+            return 'Próximo do limite';
+        }
+
+        return 'Fora do SLA';
+    }
+
+    public function getSlaStatusAttribute(): ?string
+    {
+        if (!$this->resolved_at) {
+            return null;
+        }
+
+        $minutes = $this->created_at
+            ->diffInMinutes($this->resolved_at);
+
+        if ($minutes <= 240) {
+            return 'success';
+        }
+
+        if ($minutes <= 1440) {
+            return 'warning';
+        }
+
+        return 'danger';
+    }
+
+    public function getResolutionTimeAttribute(): ?string
+    {
+        if (!$this->resolved_at) {
+            return null;
+        }
+
+        $minutes = $this->created_at
+            ->diffInMinutes($this->resolved_at);
+
+        $days = floor($minutes / 1440);
+        $hours = floor(($minutes % 1440) / 60);
+        $mins = $minutes % 60;
+
+        return trim(
+            ($days ? "{$days}d " : '') .
+            ($hours ? "{$hours}h " : '') .
+            "{$mins}min"
+        );
+    }
 
     public function user()
     {
