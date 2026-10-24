@@ -1,173 +1,190 @@
 # HelpDesk Inteligente
 
-Sistema de gerenciamento de chamados de suporte técnico desenvolvido para fins de estudo e portfólio.
+Sistema de gerenciamento de chamados desenvolvido com Laravel, focado em controle de atendimento, métricas operacionais, SLA, notificações internas e API REST.
 
-O projeto tem como objetivo demonstrar conhecimentos em desenvolvimento back-end com Laravel, modelagem de banco de dados, construção de APIs e futura integração com Inteligência Artificial para classificação automática de chamados.
+## Demonstração
 
----
+Em desenvolvimento.
 
-## Tecnologias
+## Funcionalidades
 
-### Back-end
+### Autenticação e Usuários
 
-- PHP 8.5
-- Laravel 13
-- PostgreSQL
+- Login e Logout
+- Registro de usuários
+- Recuperação de senha
+- Controle de perfis
+- Permissões por função
 
-### Front-end
+### Gestão de Chamados
+
+- Criação de chamados
+- Edição de chamados
+- Exclusão de chamados
+- Atribuição de responsáveis
+- Controle de status
+- Controle de prioridade
+- Controle de categoria
+- Filtros e pesquisa
+
+### Colaboração
+
+- Comentários em chamados
+- Anexos em chamados
+- Anexos em comentários
+
+### Histórico e Auditoria
+
+- Registro de alterações
+- Timeline de histórico
+- Alterações de status
+- Alterações de prioridade
+- Alterações de categoria
+- Alterações de responsáveis
+
+### Notificações
+
+- Notificações internas
+- Contador de notificações não lidas
+- Dropdown de notificações
+- Central de notificações
+- Marcação individual de leitura
+- Marcar todas como lidas
+
+### SLA
+
+- Registro automático de resolução
+- Tempo de resolução por chamado
+- Classificação de SLA
+- Indicadores de desempenho
+
+### Dashboard
+
+- Total de chamados
+- Chamados abertos
+- Chamados em andamento
+- Chamados aguardando retorno
+- Chamados resolvidos
+- Chamados críticos
+- Chamados sem responsável
+- Chamados atribuídos ao usuário
+- SLA médio
+- Chamados dentro do SLA
+- Chamados fora do SLA
+- Gráfico por status
+- Gráfico por categoria
+
+### API REST
+
+- GET /api/tickets
+- GET /api/tickets/{id}
+- GET /api/dashboard
+
+### Segurança
+
+- Middleware de autenticação
+- Políticas de acesso por perfil
+- Laravel Sanctum (em implementação)
+
+## Tecnologias Utilizadas
+
+### Backend
+
+- PHP 8+
+- Laravel 11
+- MySQL
+
+### Frontend
 
 - Blade
 - Bootstrap 5
-- JavaScript
+- Chart.js
 
-### Inteligência Artificial (em desenvolvimento)
+### API
 
-- Python
-- FastAPI
-
-### Ferramentas
-
-- Git
-- GitHub
-- Laragon
-- VS Code
-
----
+- Laravel API Resources
+- REST API
+- Laravel Sanctum
 
 ## Estrutura do Projeto
 
 ```text
-helpdesk-Inteligente/
-│
-├── backend/        # Aplicação Laravel
-│
-├── ia-service/     # Serviço de IA com FastAPI
-│
-├── .venv/          # Ambiente virtual Python
-│
-└── README.md
-```
+app/
+├── Http/
+│   ├── Controllers/
+│   ├── Resources/
+│   └── Requests/
+├── Models/
+├── Policies/
+├── Notifications/
+└── Services/
 
----
+resources/
+├── views/
+├── css/
+└── js/
 
-## Funcionalidades Implementadas
+routes/
+├── web.php
+└── api.php
 
-### Módulo de Chamados
+Instalação
+Clonar projeto
 
-- Cadastro de chamados
-- Listagem paginada
-- Visualização detalhada
-- Integração com PostgreSQL
-- Validação de formulários
+git clone https://github.com/seuusuario/helpdesk-inteligente.git
+ 
+Entrar na pasta
 
-Campos atualmente disponíveis:
-
-- Título
-- Descrição
-- Categoria
-- Prioridade
-- Status
-
----
-
-## Banco de Dados
-
-Banco utilizado:
-
-```text
-PostgreSQL
-```
-
-Tabela implementada:
-
-```text
-tickets
-```
-
-Campos:
-
-```text
-id
-title
-description
-category
-priority
-status
-created_at
-updated_at
-```
-
----
-
-## Como Executar o Projeto
-
-### Clonar o repositório
-
-```bash
-git clone https://github.com/MateusCoelhoSantos/helpdesk-inteligente.git
-```
-
-### Acessar o diretório
-
-```bash
-cd helpdesk-inteligente
-```
-
-### Executar o Laravel
-
-```bash
-cd backend
+cd helpdesk-inteligente/backend
+Instalar dependências
 
 composer install
+Copiar ambiente
 
 cp .env.example .env
+Gerar chave
 
 php artisan key:generate
 
+Configurar banco
+
+DB_DATABASE=helpdesk_db
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+
+Executar migrations
+
 php artisan migrate
 
+Criar link storage
+
+php artisan storage:link
+
+Iniciar servidor
+
 php artisan serve
-```
 
-A aplicação ficará disponível em:
+Roadmap
 
-```text
-http://127.0.0.1:8000
-```
+Concluído
+ Autenticação
+ Dashboard
+ Comentários
+ Anexos
+ Histórico
+ Notificações
+ SLA
+ API REST
 
----
-
-## Roadmap
-
-### Concluído
-
-- [x] Configuração do Laravel
-- [x] Integração com PostgreSQL
-- [x] Cadastro de chamados
-- [x] Listagem de chamados
-- [x] Visualização de chamados
-
-### Em desenvolvimento
-
-- [ ] Edição de chamados
-- [ ] Exclusão de chamados
-- [ ] Filtros e pesquisa
-- [ ] Testes automatizados
-
-### Futuro
-
-- [ ] Autenticação de usuários
-- [ ] Controle de permissões
-- [ ] API REST
-- [ ] Integração Laravel + FastAPI
-- [ ] Classificação automática com IA
-- [ ] Dashboard gerencial
-
----
-
-## Autor
+Próximas versões
+ Autenticação da API com Sanctum
+ CRUD completo via API
+ Exportação Excel
+ Dashboard avançado
+ FastAPI
+ Classificação automática de chamados com IA
+ Base de conhecimento
+ Chatbot de suporte
+Autor
 
 Mateus Coelho Santos
-
-GitHub:
-https://github.com/MateusCoelhoSantos
