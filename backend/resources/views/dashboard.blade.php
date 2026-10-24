@@ -20,7 +20,7 @@
                 Resumo dos Chamados
             </h2>
 
-            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-5 g-3 mb-4">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-3 mb-4">
 
                 <div class="col">
 
@@ -145,12 +145,172 @@
 
                     </a>
 
+                </div>         
+
+                <div class="col">
+                    <div class="card h-100 border-start border-4 border-dark shadow-sm">
+                        <div class="card-body text-center">
+                            <h6 class="text-muted">
+                                Chamados Críticos
+                            </h6>
+
+                            <h2 class="display-6 fw-bold text-danger mb-0">
+                                {{ $criticalTickets }}
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100 border-start border-4 border-primary shadow-sm">
+                        <div class="card-body text-center">
+                            <h6 class="text-muted">
+                                Atribuídos a Mim
+                            </h6>
+
+                            <h2 class="display-6 fw-bold text-primary mb-0">
+                                {{ $assignedToMe }}
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100 border-start border-4 border-secondary shadow-sm">
+                        <div class="card-body text-center">
+                            <h6 class="text-muted">
+                                Sem Responsável
+                            </h6>
+
+                            <h2 class="display-6 fw-bold text-secondary mb-0">
+                                {{ $unassignedTickets }}
+                            </h2>
+                        </div>
+                    </div>
                 </div>
 
             </div>    
 
-            <div class="flex flex-wrap gap-4">
+            <div class="row mt-4">
 
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            Chamados por Status
+                        </div>
+
+                        <div class="card-body">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            Chamados por Categoria
+                        </div>
+
+                        <div class="card-body">
+                            <canvas id="categoriesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="card mt-4 shadow-sm">
+
+                <div class="card-header bg-danger text-white">
+                    ⚠️ Chamados Críticos Abertos
+                </div>
+
+                <div class="card-body">
+
+                    @forelse($attentionTickets as $ticket)
+
+                        <div class="mb-2">
+
+                            <a
+                                href="{{ route('tickets.show', $ticket) }}"
+                                class="text-decoration-none fw-semibold"
+                            >
+                                #{{ $ticket->id }} - {{ $ticket->title }}
+                            </a>
+
+                            <div class="small text-muted">
+                                {{ $ticket->status_label }}
+                            </div>
+
+                        </div>
+
+                    @empty
+
+                        <p class="text-muted mb-0">
+                            Nenhum chamado crítico pendente.
+                        </p>
+
+                    @endforelse
+
+                </div>
+
+            </div> 
+
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  
+
+            <script>
+
+                const statusCtx = document.getElementById('statusChart');
+
+                new Chart(statusCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: [
+                            'Abertos',
+                            'Em Andamento',
+                            'Aguardando',
+                            'Resolvidos'
+                        ],
+                        datasets: [{
+                            data: [
+                                {{ $statusChart['open'] }},
+                                {{ $statusChart['in_progress'] }},
+                                {{ $statusChart['waiting'] }},
+                                {{ $statusChart['resolved'] }}
+                            ]
+                        }]
+                    }
+                });
+
+                const categoriesCtx = document.getElementById('categoriesChart');
+
+                new Chart(categoriesCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            'Hardware',
+                            'Software',
+                            'Rede',
+                            'Acesso',
+                            'Outros'
+                        ],
+                        datasets: [{
+                            label: 'Chamados',
+                            data: [
+                                {{ $categoriesChart['hardware'] }},
+                                {{ $categoriesChart['software'] }},
+                                {{ $categoriesChart['network'] }},
+                                {{ $categoriesChart['access'] }},
+                                {{ $categoriesChart['other'] }}
+                            ]
+                        }]
+                    }
+                });
+
+            </script>
+
+            <div class="flex flex-wrap gap-4">
+                <br>
                 <a href="{{ route('tickets.index') }}"
                 class="btn btn-primary">
                     Acessar Meus Chamados

@@ -13,7 +13,7 @@
 <body class="bg-light">
 
     <nav class="navbar navbar-dark bg-dark">
-        <div class="container">
+        <div class="container d-flex justify-content-between align-items-center">
 
             <div class="d-flex gap-3">
 
@@ -33,69 +33,70 @@
 
             @auth
 
-                <li class="nav-item dropdown">
-
-                    <a
-                        class="nav-link dropdown-toggle"
-                        href="#"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                    >
-                        🔔
-
-                        @if($unreadNotifications > 0)
-
-                            <span class="badge bg-danger">
-                                {{ $unreadNotifications }}
-                            </span>
-
-                        @endif
-
-                    </a>
-
-                    <ul class="dropdown-menu dropdown-menu-end">
-
-                        @forelse($notifications as $notification)
-
-                            <li>
-
-                                <a
-                                    class="dropdown-item"
-                                    href="{{ $notification->url }}"
-                                >
-
-                                    <strong>
-                                        {{ $notification->title }}
-                                    </strong>
-
-                                    <br>
-
-                                    <small>
-                                        {{ $notification->message }}
-                                    </small>
-
-                                </a>
-
-                            </li>
-
-                        @empty
-
-                            <li>
-                                <span class="dropdown-item-text">
-                                    Nenhuma notificação
-                                </span>
-                            </li>
-
-                        @endforelse
-
-                    </ul>
-
-                </li>
-                
                 <div class="d-flex align-items-center gap-3">
 
-                    <div class="d-flex flex-column align-items-end">
+                    <div class="dropdown">
 
+                        <a
+                            class="nav-link dropdown-toggle text-white"
+                            href="#"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                        >
+                            🔔
+
+                            @if($unreadNotifications > 0)
+                                <span class="badge bg-danger">
+                                    {{ $unreadNotifications }}
+                                </span>
+                            @endif
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end">
+
+                            @forelse($notifications as $notification)
+
+                                <li>
+
+                                    <a
+                                        href="{{ route('notifications.show', $notification) }}"
+                                        class="dropdown-item {{ !$notification->read ? 'fw-bold bg-light' : '' }}"
+                                    >
+                                        <strong>
+                                            {{ $notification->title }}
+                                        </strong>
+
+                                        <br>
+
+                                        <small>
+                                            {{ $notification->message }}
+                                        </small>
+
+                                        <br>
+
+                                        <small class="text-muted">
+                                            {{ $notification->created_at->diffForHumans() }}
+                                        </small>
+
+                                    </a>
+
+                                </li>
+
+                            @empty
+
+                                <li>
+                                    <span class="dropdown-item-text">
+                                        Nenhuma notificação
+                                    </span>
+                                </li>
+
+                            @endforelse
+
+                        </ul>
+
+                    </div>
+
+                    <div class="d-flex flex-column align-items-end">
                         <span class="text-white">
                             {{ auth()->user()->name }}
                         </span>
@@ -103,14 +104,15 @@
                         <small class="text-light">
                             {{ auth()->user()->role_label }}
                         </small>
-
                     </div>
 
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
 
-                        <button type="submit"
-                                class="btn btn-outline-light btn-sm">
+                        <button
+                            type="submit"
+                            class="btn btn-outline-light btn-sm"
+                        >
                             Sair
                         </button>
                     </form>
