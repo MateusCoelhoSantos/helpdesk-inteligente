@@ -141,12 +141,12 @@ php artisan key:generate
 Edite o arquivo `.env`:
 
 ```env
-DB_CONNECTION=mysql
+DB_CONNECTION=postgres
 DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=helpdesk
+DB_PORT=5432
+DB_DATABASE=helpdesk_db
 DB_USERNAME=root
-DB_PASSWORD=
+DB_PASSWORD=postgres
 ```
 
 ### 6. Executar migrations
