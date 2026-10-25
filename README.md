@@ -145,7 +145,7 @@ DB_CONNECTION=postgres
 DB_HOST=127.0.0.1
 DB_PORT=5432
 DB_DATABASE=helpdesk_db
-DB_USERNAME=root
+DB_USERNAME=postgres
 DB_PASSWORD=postgres
 ```
 
