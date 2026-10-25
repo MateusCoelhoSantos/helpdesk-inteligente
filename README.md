@@ -108,83 +108,186 @@ Em desenvolvimento.
 
 ## Estrutura do Projeto
 
-```text
-app/
-├── Http/
-│   ├── Controllers/
-│   ├── Resources/
-│   └── Requests/
-├── Models/
-├── Policies/
-├── Notifications/
-└── Services/
+## Instalação
 
-resources/
-├── views/
-├── css/
-└── js/
+### 1. Clonar o repositório
 
-routes/
-├── web.php
-└── api.php
-
-Instalação
-Clonar projeto
-
+```bash
 git clone https://github.com/seuusuario/helpdesk-inteligente.git
- 
-Entrar na pasta
+```
 
+### 2. Entrar no diretório do projeto
+
+```bash
 cd helpdesk-inteligente/backend
-Instalar dependências
+```
 
+### 3. Instalar dependências
+
+```bash
 composer install
-Copiar ambiente
+```
 
+### 4. Configurar ambiente
+
+```bash
 cp .env.example .env
-Gerar chave
+```
 
+```bash
 php artisan key:generate
+```
 
-Configurar banco
+### 5. Configurar banco de dados
 
-DB_DATABASE=helpdesk_db
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
+Edite o arquivo `.env`:
 
-Executar migrations
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=helpdesk
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
+### 6. Executar migrations
+
+```bash
 php artisan migrate
+```
 
-Criar link storage
+### 7. Criar link para armazenamento
 
+```bash
 php artisan storage:link
+```
 
-Iniciar servidor
+### 8. Iniciar aplicação
 
+```bash
 php artisan serve
+```
 
-Roadmap
+A aplicação estará disponível em:
 
-Concluído
- Autenticação
- Dashboard
- Comentários
- Anexos
- Histórico
- Notificações
- SLA
- API REST
+```text
+http://localhost:8000
+```
+## API REST
 
-Próximas versões
- Autenticação da API com Sanctum
- CRUD completo via API
- Exportação Excel
- Dashboard avançado
- FastAPI
- Classificação automática de chamados com IA
- Base de conhecimento
- Chatbot de suporte
-Autor
+A aplicação disponibiliza endpoints para integração com aplicações externas.
 
-Mateus Coelho Santos
+### Listar chamados
+
+```http
+GET /api/tickets
+```
+
+### Exibir um chamado
+
+```http
+GET /api/tickets/{id}
+```
+
+### Métricas do dashboard
+
+```http
+GET /api/dashboard
+```
+
+### Exemplo de resposta
+
+```json
+{
+  "total_tickets": 24,
+  "open_tickets": 8,
+  "in_progress_tickets": 3,
+  "waiting_tickets": 4,
+  "resolved_tickets": 9,
+  "critical_tickets": 8
+}
+```
+## Funcionalidades Implementadas
+
+### Autenticação
+
+- Login
+- Logout
+- Recuperação de senha
+- Verificação de e-mail
+
+### Chamados
+
+- Cadastro
+- Edição
+- Exclusão
+- Filtros
+- Pesquisa
+- Categorias
+- Prioridades
+- Status
+
+### Atendimento
+
+- Comentários
+- Anexos
+- Responsáveis
+- Histórico de alterações
+
+### Notificações
+
+- Central de notificações
+- Notificações não lidas
+- Contador em tempo real
+- Marcar notificações como lidas
+- Marcar todas como lidas
+
+### Dashboard
+
+- Indicadores operacionais
+- Gráfico por status
+- Gráfico por categoria
+- Chamados críticos
+- SLA médio
+- Chamados dentro do SLA
+- Chamados fora do SLA
+
+### API
+
+- Endpoints REST
+- Resources Laravel
+- Paginação
+- Respostas em JSON
+
+## Roadmap
+
+### Em desenvolvimento
+
+- [ ] Autenticação da API com Sanctum
+- [ ] CRUD completo via API
+- [ ] Exportação Excel
+- [ ] Dashboard avançado de produtividade
+- [ ] Integração com FastAPI
+
+### Futuro
+
+- [ ] Classificação automática de chamados com IA
+- [ ] Base de conhecimento
+- [ ] Chatbot de suporte
+- [ ] Aplicação mobile
+
+## Sobre o Projeto
+
+O HelpDesk Inteligente é um sistema de gestão de chamados desenvolvido para simular um ambiente corporativo de suporte técnico.
+
+O projeto evoluiu além de um CRUD tradicional e atualmente conta com:
+
+- Gestão completa de chamados
+- Dashboard analítico
+- Métricas de SLA
+- Central de notificações
+- Histórico de auditoria
+- API REST para integração
+
+O objetivo é servir como ambiente de aprendizado prático em Laravel, arquitetura de software, APIs e futuras integrações com Inteligência Artificial.
