@@ -106,8 +106,6 @@ Em desenvolvimento.
 - REST API
 - Laravel Sanctum
 
-## Estrutura do Projeto
-
 ## Instalação
 
 ### 1. Clonar o repositório
