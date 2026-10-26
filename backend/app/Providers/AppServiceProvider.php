@@ -23,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Paginator::useBootstrap();
+        
         View::composer('*', function ($view) {
 
             if (auth()->check()) {
