@@ -16,7 +16,7 @@ class ApiLoginTest extends TestCase
             'password' => bcrypt('12345678'),
         ]);
 
-        $response = $this->postJson('/api/login', [
+        $response = $this->postJson('/api/v1/login', [
             'email' => $user->email,
             'password' => '12345678',
         ]);
@@ -35,7 +35,7 @@ class ApiLoginTest extends TestCase
             'password' => bcrypt('12345678'),
         ]);
 
-        $response = $this->postJson('/api/login', [
+        $response = $this->postJson('/api/v1/login', [
             'email' => $user->email,
             'password' => 'senha_errada',
         ]);

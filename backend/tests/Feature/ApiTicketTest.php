@@ -20,7 +20,7 @@ class ApiTicketTest extends TestCase
 
         Ticket::factory()->count(3)->create();
 
-        $response = $this->getJson('/api/tickets');
+        $response = $this->getJson('/api/v1/tickets');
 
         $response
             ->assertStatus(200)
@@ -31,7 +31,7 @@ class ApiTicketTest extends TestCase
 
     public function test_guest_cannot_list_tickets()
     {
-        $response = $this->getJson('/api/tickets');
+        $response = $this->getJson('/api/v1/tickets');
 
         $response->assertStatus(401);
     }
@@ -42,7 +42,7 @@ class ApiTicketTest extends TestCase
 
         Sanctum::actingAs($user);
 
-        $response = $this->postJson('/api/tickets', [
+        $response = $this->postJson('/api/v1/tickets', [
 
             'title' => 'Teste API',
 
@@ -76,7 +76,7 @@ class ApiTicketTest extends TestCase
         ]);
 
         $response = $this->putJson(
-            "/api/tickets/{$ticket->id}",
+            "/api/v1/tickets/{$ticket->id}",
             [
                 'status' => 'resolved'
             ]
@@ -105,7 +105,7 @@ class ApiTicketTest extends TestCase
         $ticket = Ticket::factory()->create();
 
         $response = $this->deleteJson(
-            "/api/tickets/{$ticket->id}"
+            "/api/v1/tickets/{$ticket->id}"
         );
 
         $response->assertStatus(200);
@@ -122,7 +122,7 @@ class ApiTicketTest extends TestCase
         Sanctum::actingAs($user);
 
         $response = $this->postJson(
-            '/api/tickets',
+            '/api/v1/tickets',
             []
         );
 
