@@ -258,6 +258,21 @@ GET /api/dashboard
 - Paginação
 - Respostas em JSON
 
+## Testes
+
+O projeto possui testes automatizados para:
+
+- Autenticação da API
+- Tickets
+- Dashboard
+- Notificações
+
+Executar:
+
+```bash
+php artisan test
+```
+
 ## Roadmap
 
 ### Em desenvolvimento
