@@ -64,9 +64,11 @@ class ApiTicketTest extends TestCase
         ]);
     }
 
-    public function test_authenticated_user_can_resolve_ticket()
+    public function test_admin_can_resolve_ticket()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'role' => 'admin',
+        ]);
 
         Sanctum::actingAs($user);
 
@@ -96,9 +98,11 @@ class ApiTicketTest extends TestCase
         );
     }
 
-    public function test_authenticated_user_can_delete_ticket()
+    public function test_admin_can_delete_ticket()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'role' => 'admin',
+        ]);
 
         Sanctum::actingAs($user);
 
@@ -113,6 +117,23 @@ class ApiTicketTest extends TestCase
         $this->assertDatabaseMissing('tickets', [
             'id' => $ticket->id
         ]);
+    }
+
+    public function test_non_admin_cannot_delete_ticket()
+    {
+        $user = User::factory()->create([
+            'role' => 'user'
+        ]);
+
+        Sanctum::actingAs($user);
+
+        $ticket = Ticket::factory()->create();
+
+        $response = $this->deleteJson(
+            "/api/v1/tickets/{$ticket->id}"
+        );
+
+        $response->assertStatus(403);
     }
 
     public function test_ticket_creation_requires_required_fields()

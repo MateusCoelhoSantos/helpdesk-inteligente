@@ -6,6 +6,9 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 use App\Models\Notification;
 use Illuminate\Support\Facades\View;
+use App\Models\Ticket;
+use App\Policies\TicketPolicy;
+use Illuminate\Support\Facades\Gate;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -24,6 +27,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrap();
+
+        Gate::policy(
+            Ticket::class,
+            TicketPolicy::class
+        );
         
         View::composer('*', function ($view) {
 

@@ -46,6 +46,11 @@ class TicketController extends Controller
 
     public function update(Request $request, Ticket $ticket)
     {
+        $this->authorize(
+            'update',
+            $ticket
+        );
+        
         $validated = $request->validate([
             'title' => ['sometimes', 'string', 'max:255'],
             'description' => ['sometimes', 'string'],
@@ -72,6 +77,11 @@ class TicketController extends Controller
 
     public function destroy(Ticket $ticket)
     {
+        $this->authorize(
+            'delete', 
+            $ticket
+        );
+
         $ticket->delete();
 
         return response()->json([
