@@ -106,5 +106,15 @@ Route::prefix('v1')->group(function () {
             [AIController::class, 'classifyTicket']
         );
 
+        Route::get(
+            '/ai/tickets/{ticket}/summary',
+            [AIController::class, 'summarizeTicket']
+        );
+
+        Route::post(
+            '/ai/suggest-reply',
+            [AIController::class, 'suggestReply']
+        );
+
     });
 });
