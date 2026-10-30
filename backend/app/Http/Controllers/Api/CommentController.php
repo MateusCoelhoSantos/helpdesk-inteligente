@@ -6,6 +6,7 @@ use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Models\TicketComment;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CommentResource;
 
 class CommentController extends Controller
 {
@@ -13,11 +14,11 @@ class CommentController extends Controller
     {
         $this->authorize('view', $ticket);
 
-        return response()->json(
+        return CommentResource::collection(
             $ticket->comments()
                 ->with('user:id,name')
                 ->latest()
-                ->get()
+                ->paginate(20)
         );
     }
 
@@ -37,9 +38,8 @@ class CommentController extends Controller
             'message' => $validated['message'],
         ]);
 
-        return response()->json(
-            $comment->load('user:id,name'),
-            201
-        );
+        return (new CommentResource(
+            $comment->load('user:id,name')
+        ))->response()->setStatusCode(201);
     }
 }

@@ -37,7 +37,13 @@ class ApiCommentTest extends TestCase
 
         $response->assertStatus(200);
 
-        $response->assertJsonCount(3);
+        $response->assertJsonCount(3, 'data');
+
+        $response->assertJsonStructure([
+            'data',
+            'links',
+            'meta',
+        ]);
     }
 
     public function test_authenticated_user_can_create_comment()

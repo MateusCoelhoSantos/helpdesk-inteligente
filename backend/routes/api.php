@@ -7,7 +7,8 @@ use App\Http\Controllers\Api\DashboardController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\CommentController;
-
+use App\Http\Controllers\Api\AttachmentController;
+use App\Http\Controllers\Api\HistoryController;
 
 Route::prefix('v1')->group(function () {
 
@@ -82,6 +83,21 @@ Route::prefix('v1')->group(function () {
         Route::post(
             '/tickets/{ticket}/comments',
             [CommentController::class, 'store']
+        );
+
+        Route::get(
+            '/tickets/{ticket}/attachments',
+            [AttachmentController::class, 'index']
+        );
+
+        Route::post(
+            '/tickets/{ticket}/attachments',
+            [AttachmentController::class, 'store']
+        );
+
+        Route::get(
+            '/tickets/{ticket}/history',
+            [HistoryController::class, 'index']
         );
 
     });

@@ -28,7 +28,12 @@ class ApiNotificationTest extends TestCase
 
         $response
             ->assertStatus(200)
-            ->assertJsonCount(3, 'data');
+            ->assertJsonCount(3, 'data')
+            ->assertJsonStructure([
+                'data',
+                'links',
+                'meta',
+            ]);
     }
 
     public function test_guest_cannot_list_notifications()

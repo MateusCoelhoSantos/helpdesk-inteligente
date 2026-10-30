@@ -156,4 +156,163 @@ class ApiTicketTest extends TestCase
             'priority',
         ]);
     }
+
+    public function test_can_filter_tickets_by_status()
+    {
+        Sanctum::actingAs(
+            User::factory()->create()
+        );
+
+        Ticket::factory()->create([
+            'status' => 'open',
+        ]);
+
+        Ticket::factory()->create([
+            'status' => 'resolved',
+        ]);
+
+        $response = $this->getJson(
+            '/api/v1/tickets?status=open'
+        );
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonCount(1, 'data');
+    }
+
+    public function test_can_filter_tickets_by_priority()
+    {
+        Sanctum::actingAs(
+            User::factory()->create()
+        );
+
+        Ticket::factory()->create([
+            'priority' => 'high',
+        ]);
+
+        Ticket::factory()->create([
+            'priority' => 'low',
+        ]);
+
+        $response = $this->getJson(
+            '/api/v1/tickets?priority=high'
+        );
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonCount(1, 'data');
+    }
+
+    public function test_can_filter_tickets_by_category()
+    {
+        Sanctum::actingAs(
+            User::factory()->create()
+        );
+
+        Ticket::factory()->create([
+            'category' => 'hardware',
+        ]);
+
+        Ticket::factory()->create([
+            'category' => 'network',
+        ]);
+
+        $response = $this->getJson(
+            '/api/v1/tickets?category=hardware'
+        );
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonCount(1, 'data');
+    }
+
+    public function test_can_search_tickets()
+    {
+        Sanctum::actingAs(
+            User::factory()->create()
+        );
+
+        Ticket::factory()->create([
+            'title' => 'Problema na impressora',
+        ]);
+
+        Ticket::factory()->create([
+            'title' => 'Falha no servidor',
+        ]);
+
+        $response = $this->getJson(
+            '/api/v1/tickets?q=impressora'
+        );
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonCount(1, 'data');
+    }
+
+    public function test_can_sort_tickets_ascending()
+    {
+        Sanctum::actingAs(
+            User::factory()->create()
+        );
+
+        Ticket::factory()->create([
+            'title' => 'Zeta'
+        ]);
+
+        Ticket::factory()->create([
+            'title' => 'Alpha'
+        ]);
+
+        $response = $this->getJson(
+            '/api/v1/tickets?sort=title&direction=asc'
+        );
+
+        $response
+            ->assertStatus(200);
+
+        $this->assertEquals(
+            'Alpha',
+            $response->json('data.0.title')
+        );
+    }
+
+    public function test_can_sort_tickets_descending()
+    {
+        Sanctum::actingAs(
+            User::factory()->create()
+        );
+
+        Ticket::factory()->create([
+            'title' => 'Alpha'
+        ]);
+
+        Ticket::factory()->create([
+            'title' => 'Zeta'
+        ]);
+
+        $response = $this->getJson(
+            '/api/v1/tickets?sort=title&direction=desc'
+        );
+
+        $response
+            ->assertStatus(200);
+
+        $this->assertEquals(
+            'Zeta',
+            $response->json('data.0.title')
+        );
+    }
+
+    public function test_invalid_sort_field_falls_back_to_default()
+    {
+        Sanctum::actingAs(
+            User::factory()->create()
+        );
+
+        $response = $this->getJson(
+            '/api/v1/tickets?sort=hacker_field'
+        );
+
+        $response->assertStatus(200);
+    }
 }
