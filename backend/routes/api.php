@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\TicketController;
 use App\Http\Controllers\Api\DashboardController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\CommentController;
 
 
 Route::prefix('v1')->group(function () {
@@ -71,6 +72,16 @@ Route::prefix('v1')->group(function () {
         Route::patch(
             '/notifications/read-all',
             [NotificationController::class, 'markAllAsRead']
+        );
+
+        Route::get(
+            '/tickets/{ticket}/comments',
+            [CommentController::class, 'index']
+        );
+
+        Route::post(
+            '/tickets/{ticket}/comments',
+            [CommentController::class, 'store']
         );
 
     });
