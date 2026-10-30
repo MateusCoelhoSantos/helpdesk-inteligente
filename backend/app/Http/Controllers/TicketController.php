@@ -174,6 +174,8 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket)
     {
+        $this->authorize('view', $ticket);
+
         $ticket->load([
             'histories.user',
             'comments.user',
@@ -188,6 +190,8 @@ class TicketController extends Controller
 
     public function edit(Ticket $ticket)
     {
+        $this->authorize('update', $ticket);
+
         $users = \App\Models\User::orderBy('name')->get();
 
         return view(
@@ -198,6 +202,8 @@ class TicketController extends Controller
 
     public function update(Request $request, Ticket $ticket)
     {
+        $this->authorize('update', $ticket);
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
@@ -336,6 +342,8 @@ class TicketController extends Controller
 
     public function destroy(Ticket $ticket)
     {
+        $this->authorize('delete', $ticket);
+        
         $ticket->delete();
 
         return redirect()

@@ -22,30 +22,34 @@
 
         <div class="d-flex gap-2">
 
-            <a href="{{ route('tickets.edit', $ticket) }}"
-            class="btn btn-warning">
-                Editar chamado
-            </a>
+            @can('update', $ticket)
+                <a href="{{ route('tickets.edit', $ticket) }}"
+                class="btn btn-warning">
+                    Editar chamado
+                </a>
+            @endcan
 
-            <form action="{{ route('tickets.destroy', $ticket) }}"
-                method="POST"
-                onsubmit="return confirm('Tem certeza que deseja excluir este chamado?');">
+            @can('delete', $ticket)
+                <form action="{{ route('tickets.destroy', $ticket) }}"
+                    method="POST"
+                    onsubmit="return confirm('Tem certeza que deseja excluir este chamado?');">
 
-                @csrf
-                @method('DELETE')
+                    @csrf
+                    @method('DELETE')
 
-                <button type="submit"
-                        class="btn btn-danger">
-                    Excluir chamado
-                </button>
+                    <button type="submit"
+                            class="btn btn-danger">
+                        Excluir chamado
+                    </button>
 
-            </form>
+                </form>
+            @endcan
 
             <a href="{{ route('tickets.index') }}"
             class="btn btn-secondary">
                 Voltar
             </a>
-
+            
         </div>
 
     </div>
