@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\AttachmentController;
 use App\Http\Controllers\Api\HistoryController;
+use App\Http\Controllers\Api\AIController;
 
 Route::prefix('v1')->group(function () {
 
@@ -98,6 +99,11 @@ Route::prefix('v1')->group(function () {
         Route::get(
             '/tickets/{ticket}/history',
             [HistoryController::class, 'index']
+        );
+
+        Route::post(
+            '/ai/classify-ticket',
+            [AIController::class, 'classifyTicket']
         );
 
     });
