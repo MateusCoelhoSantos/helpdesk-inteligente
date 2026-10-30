@@ -273,6 +273,17 @@ Executar:
 php artisan test
 ```
 
+## API Features
+
+- Laravel Sanctum Authentication
+- RESTful Endpoints
+- API Resources
+- Pagination
+- Filtering
+- Sorting
+- Scramble Documentation
+- Automated Testing
+
 ## Roadmap
 
 ### Em desenvolvimento
