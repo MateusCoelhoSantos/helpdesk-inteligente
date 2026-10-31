@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\View;
 use App\Models\Ticket;
 use App\Policies\TicketPolicy;
 use Illuminate\Support\Facades\Gate;
+use App\Services\AI\Contracts\AIProvider;
+use App\Services\AI\Providers\RuleBasedAIProvider;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -18,7 +20,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(
+            AIProvider::class,
+            RuleBasedAIProvider::class
+        );
     }
 
     /**

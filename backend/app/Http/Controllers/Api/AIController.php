@@ -4,16 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Services\AI\TicketClassifierService;
 use App\Models\Ticket;
-use App\Services\AI\TicketSummaryService;
-use App\Services\AI\ReplySuggestionService;
+use App\Services\AI\Contracts\AIProvider;
 
 class AIController extends Controller
 {
     public function classifyTicket(
-        Request $request,
-        TicketClassifierService $classifier
+    Request $request,
+    AIProvider $ai
     ) {
         $validated = $request->validate([
             'title' => ['required', 'string'],
@@ -21,7 +19,7 @@ class AIController extends Controller
         ]);
 
         return response()->json(
-            $classifier->classify(
+            $ai->classify(
                 $validated['title'],
                 $validated['description']
             )
@@ -30,25 +28,25 @@ class AIController extends Controller
 
     public function summarizeTicket(
     Ticket $ticket,
-    TicketSummaryService $summaryService
+    AIProvider $ai
     ) {
         $this->authorize('view', $ticket);
 
         return response()->json([
-            'summary' => $summaryService->summarize($ticket),
+            'summary' => $ai->summarize($ticket),
         ]);
     }
 
     public function suggestReply(
     Request $request,
-    ReplySuggestionService $service
+    AIProvider $ai
     ) {
         $validated = $request->validate([
             'message' => ['required', 'string'],
         ]);
 
         return response()->json([
-            'suggestion' => $service->suggest(
+            'suggestion' => $ai->suggestReply(
                 $validated['message']
             ),
         ]);
