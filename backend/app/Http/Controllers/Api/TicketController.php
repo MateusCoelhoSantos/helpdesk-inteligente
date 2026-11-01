@@ -126,6 +126,9 @@ class TicketController extends Controller
             'category' => $classifications['category'],
             'priority' => $classifications['priority'],
 
+            'ai_provider' => config('ai.provider'),
+            'ai_confidence' => $classifications['confidence'],
+            
             'status' => 'open',
         ]);
 

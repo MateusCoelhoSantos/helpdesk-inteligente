@@ -19,6 +19,8 @@ class Ticket extends Model
         'resolved_at',
         'user_id',
         'assigned_to',
+        'ai_provider',
+        'ai_confidence',    
     ];
 
     protected $casts = [

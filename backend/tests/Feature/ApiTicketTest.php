@@ -7,6 +7,10 @@ use App\Models\User;
 use App\Models\Ticket;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Services\AI\Contracts\AIProvider;
+use App\Services\AI\Providers\OpenAIProvider;
+use App\Services\AI\Providers\RuleBasedAIProvider;
+
 
 class ApiTicketTest extends TestCase
 {
@@ -316,8 +320,20 @@ class ApiTicketTest extends TestCase
 
     public function test_ticket_is_auto_classified()
     {
+
+        config([
+            'ai.provider' => 'rule-based',
+        ]);
+
         Sanctum::actingAs(
             User::factory()->create()
+        );
+
+        $this->app->bind(
+            \App\Services\AI\Contracts\AIProvider::class,
+            fn () => app(
+                \App\Services\AI\Providers\RuleBasedAIProvider::class
+            )
         );
 
         $response = $this->postJson(
@@ -391,6 +407,64 @@ class ApiTicketTest extends TestCase
         $this->assertDatabaseCount(
             'ticket_histories',
             1
+        );
+    }
+
+    public function test_ticket_stores_ai_metadata()
+    {
+        Sanctum::actingAs(
+            User::factory()->create()
+        );
+
+        $this->postJson(
+            '/api/v1/tickets',
+            [
+                'title' => 'Impressora parada',
+                'description' => 'Equipamento não imprime',
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'tickets',
+            [
+                'ai_provider' => config('ai.provider'),
+            ]
+        );
+    }
+
+    public function test_can_resolve_openai_provider()
+    {
+        config([
+            'ai.provider' => 'openai'
+        ]);
+
+        $provider = app(
+            AIProvider::class
+        );
+
+        $this->assertInstanceOf(
+            OpenAIProvider::class,
+            $provider
+        );
+    }
+
+    public function test_can_resolve_rule_based_provider()
+    {
+        config([
+            'ai.provider' => 'rule-based',
+        ]);
+
+        app()->forgetInstance(
+            \App\Services\AI\Contracts\AIProvider::class
+        );
+
+        $provider = app(
+            AIProvider::class
+        );
+
+        $this->assertInstanceOf(
+            RuleBasedAIProvider::class,
+            $provider
         );
     }
 }

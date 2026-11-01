@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Services\AI\Contracts\AIProvider;
 use App\Services\AI\Providers\RuleBasedAIProvider;
 use InvalidArgumentException;
-
+use App\Services\AI\Providers\OpenAIProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,8 +28,13 @@ class AppServiceProvider extends ServiceProvider
                 return match (
                     config('ai.provider')
                 ) {
+
                     'rule-based' => app(
                         RuleBasedAIProvider::class
+                    ),
+
+                    'openai' => app(
+                        OpenAIProvider::class
                     ),
 
                     default => throw new InvalidArgumentException(

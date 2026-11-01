@@ -37,6 +37,10 @@ class TicketResource extends JsonResource
             'resolved_at' => $this->resolved_at,
 
             'resolution_time' => $this->resolution_time,
+
+            'ai_provider' => $this->ai_provider,
+
+            'ai_confidence' => $this->ai_confidence,
         ];
     }
 }
