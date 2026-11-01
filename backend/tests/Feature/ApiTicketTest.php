@@ -152,8 +152,6 @@ class ApiTicketTest extends TestCase
         $response->assertJsonValidationErrors([
             'title',
             'description',
-            'category',
-            'priority',
         ]);
     }
 
@@ -314,5 +312,85 @@ class ApiTicketTest extends TestCase
         );
 
         $response->assertStatus(200);
+    }
+
+    public function test_ticket_is_auto_classified()
+    {
+        Sanctum::actingAs(
+            User::factory()->create()
+        );
+
+        $response = $this->postJson(
+            '/api/v1/tickets',
+            [
+                'title' => 'Impressora não imprime',
+                'description' => 'Equipamento parado',
+            ]
+        );
+
+        $response
+            ->assertStatus(201);
+
+        $this->assertDatabaseHas(
+            'tickets',
+            [
+                'category' => 'hardware',
+                'priority' => 'high',
+            ]
+        );
+    }
+
+    public function test_ai_classification_is_logged_in_history()
+    {
+        Sanctum::actingAs(
+            User::factory()->create()
+        );
+
+        $response = $this->postJson(
+            '/api/v1/tickets',
+            [
+                'title' => 'Impressora não imprime',
+                'description' => 'Equipamento parado',
+            ]
+        );
+
+        $ticket = Ticket::latest()->first();
+
+        $this->assertDatabaseHas(
+            'ticket_histories',
+            [
+                'ticket_id' => $ticket->id,
+                'action' => 'ai_classification',
+            ]
+        );
+    }
+
+    public function test_ai_classification_is_logged()
+    {
+        Sanctum::actingAs(
+            User::factory()->create()
+        );
+
+        $response = $this->postJson(
+            '/api/v1/tickets',
+            [
+                'title' => 'Impressora não imprime',
+                'description' => 'Equipamento parado',
+            ]
+        );
+
+        $ticket = Ticket::latest()->first();
+
+        $this->assertDatabaseHas(
+            'ticket_histories',
+            [
+                'ticket_id' => $ticket->id,
+                'action' => 'ai_classification',
+            ]
+        );
+        $this->assertDatabaseCount(
+            'ticket_histories',
+            1
+        );
     }
 }
