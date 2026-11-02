@@ -74,12 +74,12 @@ class OllamaProvider implements AIProvider
     }
 
     public function suggestReply(
-        string $message
+        Ticket $ticket
     ): string {
 
         $response = $this->client->chat(
             TicketReplyPrompt::make(
-                $message
+                $ticket
             )
         );
 
@@ -87,5 +87,5 @@ class OllamaProvider implements AIProvider
             $response['response']
         );
     }
-
+    
 }

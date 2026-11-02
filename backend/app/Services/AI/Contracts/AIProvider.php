@@ -16,6 +16,6 @@ interface AIProvider
     ): string;
 
     public function suggestReply(
-        string $message
+        Ticket $ticket
     ): string;
 }

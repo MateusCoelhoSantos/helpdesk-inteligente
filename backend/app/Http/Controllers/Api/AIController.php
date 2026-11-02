@@ -41,18 +41,17 @@ class AIController extends Controller
     }
 
     public function suggestReply(
-        Request $request,
+        Ticket $ticket,
         AIProvider $ai
-    ) {
-
-        $request->validate([
-            'message' => ['required', 'string'],
-        ]);
+    )
+    {
+        $ticket->load('comments');
 
         return response()->json([
             'reply' => $ai->suggestReply(
-                $request->message
+                $ticket
             ),
         ]);
     }
+
 }

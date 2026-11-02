@@ -111,8 +111,8 @@ Route::prefix('v1')->group(function () {
             [AIController::class, 'summarizeTicket']
         );
 
-        Route::post(
-            '/ai/suggest-reply',
+        Route::get(
+            '/tickets/{ticket}/suggest-reply',
             [AIController::class, 'suggestReply']
         );
 
