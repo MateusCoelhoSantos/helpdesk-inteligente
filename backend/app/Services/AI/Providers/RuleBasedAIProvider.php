@@ -11,6 +11,7 @@ class RuleBasedAIProvider implements AIProvider
         string $title,
         string $description
     ): array {
+
         $text = strtolower($title.' '.$description);
 
         return [

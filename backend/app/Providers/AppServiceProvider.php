@@ -13,6 +13,7 @@ use App\Services\AI\Contracts\AIProvider;
 use App\Services\AI\Providers\RuleBasedAIProvider;
 use InvalidArgumentException;
 use App\Services\AI\Providers\OpenAIProvider;
+use App\Services\AI\Providers\OllamaProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,6 +36,10 @@ class AppServiceProvider extends ServiceProvider
 
                     'openai' => app(
                         OpenAIProvider::class
+                    ),
+
+                    'ollama' => app(
+                        OllamaProvider::class
                     ),
 
                     default => throw new InvalidArgumentException(

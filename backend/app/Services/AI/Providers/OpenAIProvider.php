@@ -5,9 +5,13 @@ namespace App\Services\AI\Providers;
 use App\Models\Ticket;
 use App\Services\AI\Contracts\AIProvider;
 use App\Services\AI\Clients\OpenAIClient;
+use App\Services\AI\Prompts\TicketClassificationPrompt;
+use App\Services\AI\Concerns\ExtractsJson;
 
 class OpenAIProvider implements AIProvider
 {
+    use ExtractsJson;
+
     public function classify(
         string $title,
         string $description
@@ -15,23 +19,108 @@ class OpenAIProvider implements AIProvider
 
         try {
 
-            // chamada real virá aqui
+            $response = $this->client
+                ->make()
+                ->chat()
+                ->create([
+                    'model' => config(
+                        'ai.openai.model'
+                    ),
 
-            return [
-                'category' => 'ai-category',
-                'priority' => 'medium',
-                'confidence' => 0.95,
-            ];
+                    'messages' => [
+                        [
+                            'role' => 'system',
+                            'content' =>
+                                'Você classifica tickets de helpdesk. Retorne apenas JSON.'
+                        ],
+                        [
+                            'role' => 'user',
+                            'content' => TicketClassificationPrompt::make(
+                                $title,
+                                $description
+                            ),
+                        ],
+                    ],
+                ]);
+
+            $content = $response
+                ->choices[0]
+                ->message
+                ->content;
+
+            $result = $this->extractJson(
+                $content
+            );
+
+            return $this->validateClassification(
+                $result
+            );
 
         } catch (\Throwable $e) {
+        
+            return [
+                'category' => 'other',
+                'priority' => 'medium',
+                'confidence' => 0.0,
+                'provider' => 'openai-fallback',
+            ];  
 
-            return app(
-                RuleBasedAIProvider::class
-            )->classify(
-                $title,
-                $description
-            );
         }
+
+    }
+
+    private function validateClassification(
+        array $data
+    ): array
+    {
+        $categories = [
+            'hardware',
+            'software',
+            'network',
+            'access',
+            'other',
+        ];
+
+        $priorities = [
+            'low',
+            'medium',
+            'high',
+            'critical'
+        ];
+
+        if (! in_array(
+            $data['category'] ?? '',
+            $categories
+        )) {
+            $data['category'] = 'other';
+        }
+
+        if (! in_array(
+            $data['priority'] ?? '',
+            $priorities
+        )) {
+            $data['priority'] = 'medium';
+        }
+
+        return $data;
+    }
+
+    private function extractJson(
+        string $content
+    ): array
+    {
+        $content = str_replace(
+            ['```json', '```'],
+            '',
+            $content
+        );
+
+        return json_decode(
+            trim($content),
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
     }
 
     public function summarize(
@@ -52,26 +141,5 @@ class OpenAIProvider implements AIProvider
     public function __construct(
         private OpenAIClient $client
     ) {
-    }
-
-    public function test_openai_provider_can_fallback()
-    {
-        $provider = app(
-            OpenAIProvider::class
-        );
-
-        $result = $provider->classify(
-            'Impressora não imprime',
-            'Equipamento parado'
-        );
-
-        $this->assertIsArray(
-            $result
-        );
-
-        $this->assertArrayHasKey(
-            'category',
-            $result
-        );
     }
 }

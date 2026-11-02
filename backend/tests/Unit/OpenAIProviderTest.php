@@ -35,4 +35,25 @@ class OpenAIProviderTest extends TestCase
             $result
         );
     }
+
+    public function test_openai_provider_can_fallback()
+    {
+        $provider = app(
+            OpenAIProvider::class
+        );
+
+        $result = $provider->classify(
+            'Impressora não imprime',
+            'Equipamento parado'
+        );
+
+        $this->assertIsArray(
+            $result
+        );
+
+        $this->assertArrayHasKey(
+            'category',
+            $result
+        );
+    }
 }
