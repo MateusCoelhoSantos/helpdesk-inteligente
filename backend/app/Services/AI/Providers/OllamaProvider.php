@@ -10,11 +10,15 @@ use App\Services\AI\Concerns\ExtractsJson;
 use App\Services\AI\Concerns\ValidatesClassification;
 use App\Services\AI\Prompts\TicketSummaryPrompt;
 use App\Services\AI\Prompts\TicketReplyPrompt;
+use App\Services\AI\Prompts\TicketClosurePrompt;
+use App\Services\AI\Concerns\ValidatesClosureReport;
 
 class OllamaProvider implements AIProvider
 {
     use ExtractsJson;
     use ValidatesClassification;
+    use ValidatesClosureReport;
+
 
     public function __construct(
         private OllamaClient $client
@@ -87,5 +91,24 @@ class OllamaProvider implements AIProvider
             $response['response']
         );
     }
-    
+
+    public function generateClosureReport(
+        Ticket $ticket
+    ): array {
+
+        $response = $this->client->chat(
+            TicketClosurePrompt::make(
+                $ticket
+            )
+        );
+
+        $result = $this->extractJson(
+            $response['response']
+        );
+
+        return $this->validateClosureReport(
+            $result
+        );
+    }
+
 }

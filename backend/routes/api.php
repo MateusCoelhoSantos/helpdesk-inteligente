@@ -116,5 +116,10 @@ Route::prefix('v1')->group(function () {
             [AIController::class, 'suggestReply']
         );
 
+        Route::get(
+            '/tickets/{ticket}/closure-report',
+            [AIController::class, 'closureReport']
+        );
+
     });
 });

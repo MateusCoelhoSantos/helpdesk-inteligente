@@ -18,4 +18,8 @@ interface AIProvider
     public function suggestReply(
         Ticket $ticket
     ): string;
+
+    public function generateClosureReport(
+        Ticket $ticket
+    ): array;
 }

@@ -54,4 +54,18 @@ class AIController extends Controller
         ]);
     }
 
+    public function closureReport(
+        Ticket $ticket,
+        AIProvider $ai
+    )
+    {
+        $ticket->load('comments');
+
+        return response()->json([
+            'report' => $ai->generateClosureReport(
+                $ticket
+            ),
+        ]);
+    }
+
 }
