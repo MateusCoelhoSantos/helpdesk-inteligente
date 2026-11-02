@@ -27,27 +27,31 @@ class AIController extends Controller
     }
 
     public function summarizeTicket(
-    Ticket $ticket,
-    AIProvider $ai
+        Ticket $ticket,
+        AIProvider $ai
     ) {
-        $this->authorize('view', $ticket);
+
+        $ticket->load('comments');
 
         return response()->json([
-            'summary' => $ai->summarize($ticket),
+            'summary' => $ai->summarize(
+                $ticket
+            ),
         ]);
     }
 
     public function suggestReply(
-    Request $request,
-    AIProvider $ai
+        Request $request,
+        AIProvider $ai
     ) {
-        $validated = $request->validate([
+
+        $request->validate([
             'message' => ['required', 'string'],
         ]);
 
         return response()->json([
-            'suggestion' => $ai->suggestReply(
-                $validated['message']
+            'reply' => $ai->suggestReply(
+                $request->message
             ),
         ]);
     }

@@ -1,0 +1,12 @@
+$kind: http-request
+description: ""
+url: http://127.0.0.1:8000/api/v1/tickets/41/summary
+method: GET
+body:
+  type: json
+  content: ""
+auth:
+  type: bearer
+  credentials:
+    token: 6|p4elKnkIe5OWTJTeJTL6xiJeUfSU8n4NV0er0fla70e3a49c
+order: 3000

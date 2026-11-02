@@ -107,7 +107,7 @@ Route::prefix('v1')->group(function () {
         );
 
         Route::get(
-            '/ai/tickets/{ticket}/summary',
+            '/tickets/{ticket}/summary',
             [AIController::class, 'summarizeTicket']
         );
 

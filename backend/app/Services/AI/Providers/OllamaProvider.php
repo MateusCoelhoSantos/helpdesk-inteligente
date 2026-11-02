@@ -8,6 +8,8 @@ use App\Services\AI\Clients\OllamaClient;
 use App\Services\AI\Prompts\TicketClassificationPrompt;
 use App\Services\AI\Concerns\ExtractsJson;
 use App\Services\AI\Concerns\ValidatesClassification;
+use App\Services\AI\Prompts\TicketSummaryPrompt;
+use App\Services\AI\Prompts\TicketReplyPrompt;
 
 class OllamaProvider implements AIProvider
 {
@@ -60,14 +62,30 @@ class OllamaProvider implements AIProvider
         Ticket $ticket
     ): string {
 
-        return '[OLLAMA] resumo';
+        $response = $this->client->chat(
+            TicketSummaryPrompt::make(
+                $ticket
+            )
+        );
+
+        return trim(
+            $response['response']
+        );
     }
 
     public function suggestReply(
         string $message
     ): string {
 
-        return '[OLLAMA] resposta';
+        $response = $this->client->chat(
+            TicketReplyPrompt::make(
+                $message
+            )
+        );
+
+        return trim(
+            $response['response']
+        );
     }
 
 }
