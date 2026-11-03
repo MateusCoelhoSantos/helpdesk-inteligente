@@ -142,4 +142,17 @@ class OpenAIProvider implements AIProvider
         private OpenAIClient $client
     ) {
     }
+
+    public function generateKnowledgeArticle(
+        Ticket $ticket
+    ): array {
+
+        return [
+            'title' => '',
+            'problem' => '',
+            'cause' => '',
+            'solution' => '',
+            'prevention' => '',
+        ];
+    }
 }

@@ -22,4 +22,8 @@ interface AIProvider
     public function generateClosureReport(
         Ticket $ticket
     ): array;
+
+    public function generateKnowledgeArticle(
+        Ticket $ticket
+    ): array;
 }

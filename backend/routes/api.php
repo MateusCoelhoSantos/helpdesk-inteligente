@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\AttachmentController;
 use App\Http\Controllers\Api\HistoryController;
 use App\Http\Controllers\Api\AIController;
 
+
 Route::prefix('v1')->group(function () {
 
     Route::post('/login', [
@@ -119,6 +120,29 @@ Route::prefix('v1')->group(function () {
         Route::get(
             '/tickets/{ticket}/closure-report',
             [AIController::class, 'closureReport']
+        );
+
+        Route::get(
+            '/tickets/{ticket}/knowledge-article',
+            [AIController::class, 'knowledgeArticle']
+        );
+
+        Route::post(
+            '/tickets/{ticket}/knowledge-articles',
+            [AIController::class,
+            'generateKnowledgeArticle']
+        );
+
+        Route::get(
+            '/knowledge-articles',
+            [AIController::class,
+            'listKnowledgeArticles']
+        );
+
+        Route::get(
+            '/knowledge-articles/search',
+            [AIController::class,
+            'searchKnowledgeArticles']
         );
 
     });

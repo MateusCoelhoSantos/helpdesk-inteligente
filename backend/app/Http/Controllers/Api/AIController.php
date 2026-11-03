@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Ticket;
 use App\Services\AI\Contracts\AIProvider;
+use App\Services\Knowledge\KnowledgeArticleService;
+use App\Models\KnowledgeArticle;
 
 class AIController extends Controller
 {
@@ -66,6 +68,58 @@ class AIController extends Controller
                 $ticket
             ),
         ]);
+    }
+
+    public function knowledgeArticle(
+        Ticket $ticket,
+        AIProvider $ai
+    )
+    {
+        $ticket->load('comments');
+
+        return response()->json([
+            'article' => $ai->generateKnowledgeArticle(
+                $ticket
+            ),
+        ]);
+    }
+
+    public function generateKnowledgeArticle(
+        Ticket $ticket,
+        AIProvider $ai,
+        KnowledgeArticleService $service
+    )
+    {
+        return response()->json(
+            $service->generateFromTicket(
+                $ticket,
+                $ai
+            )
+        );
+    }
+
+    public function listKnowledgeArticles()
+    {
+        return KnowledgeArticle::latest()
+            ->paginate();
+    }
+
+    public function searchKnowledgeArticles(
+        Request $request
+    )
+    {
+        return KnowledgeArticle::query()
+
+            ->when(
+                $request->q,
+                fn ($query) => $query->where(
+                    'title',
+                    'like',
+                    '%' . $request->q . '%'
+                )
+            )
+
+            ->paginate();
     }
 
 }

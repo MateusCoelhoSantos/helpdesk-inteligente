@@ -153,4 +153,11 @@ class Ticket extends Model
             ->latest();
     }
 
+    public function knowledgeArticles()
+    {
+        return $this->hasMany(
+            KnowledgeArticle::class
+        );
+    }
+
 }

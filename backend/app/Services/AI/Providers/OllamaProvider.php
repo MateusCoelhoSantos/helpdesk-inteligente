@@ -12,13 +12,16 @@ use App\Services\AI\Prompts\TicketSummaryPrompt;
 use App\Services\AI\Prompts\TicketReplyPrompt;
 use App\Services\AI\Prompts\TicketClosurePrompt;
 use App\Services\AI\Concerns\ValidatesClosureReport;
+use App\Services\AI\Prompts\TicketKnowledgePrompt;
+use App\Services\AI\Concerns\ValidatesKnowledgeArticle;
+
 
 class OllamaProvider implements AIProvider
 {
     use ExtractsJson;
     use ValidatesClassification;
     use ValidatesClosureReport;
-
+    use ValidatesKnowledgeArticle;
 
     public function __construct(
         private OllamaClient $client
@@ -107,6 +110,25 @@ class OllamaProvider implements AIProvider
         );
 
         return $this->validateClosureReport(
+            $result
+        );
+    }
+
+    public function generateKnowledgeArticle(
+        Ticket $ticket
+    ): array {
+
+        $response = $this->client->chat(
+            TicketKnowledgePrompt::make(
+                $ticket
+            )
+        );
+
+        $result = $this->extractJson(
+            $response['response']
+        );
+
+        return $this->validateKnowledgeArticle(
             $result
         );
     }

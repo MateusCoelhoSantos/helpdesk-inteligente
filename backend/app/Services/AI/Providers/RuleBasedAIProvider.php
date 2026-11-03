@@ -101,4 +101,17 @@ class RuleBasedAIProvider implements AIProvider
 
         return 'medium';
     }
+
+    public function generateKnowledgeArticle(
+        Ticket $ticket
+    ): array {
+
+        return [
+            'title' => $ticket->title,
+            'problem' => $ticket->description,
+            'cause' => 'Não identificada',
+            'solution' => 'Não registrada',
+            'prevention' => 'Não registrada',
+        ];
+    }
 }
