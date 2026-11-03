@@ -145,5 +145,11 @@ Route::prefix('v1')->group(function () {
             'searchKnowledgeArticles']
         );
 
+        Route::post(
+            '/knowledge-articles/suggest',
+            [AIController::class,
+            'suggestKnowledgeArticles']
+        );
+
     });
 });

@@ -14,7 +14,7 @@
         "openai-php/client": "^0.22.0"
     },
     "require-dev": {
-        "dedoc/scramble": "^0.13.52",
+        "dedoc/scramble": "^0.13.53",
         "fakerphp/faker": "^1.23",
         "laravel/breeze": "^2.4",
         "laravel/pail": "^1.2.5",

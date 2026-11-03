@@ -8,6 +8,7 @@ use App\Models\Ticket;
 use App\Services\AI\Contracts\AIProvider;
 use App\Services\Knowledge\KnowledgeArticleService;
 use App\Models\KnowledgeArticle;
+use App\Services\Knowledge\KnowledgeSearchService;
 
 class AIController extends Controller
 {
@@ -120,6 +121,22 @@ class AIController extends Controller
             )
 
             ->paginate();
+    }
+
+    public function suggestKnowledgeArticles(
+        Request $request,
+        KnowledgeSearchService $service
+    )
+    {
+        $request->validate([
+            'query' => ['required', 'string'],
+        ]);
+
+        return response()->json([
+            'suggested_articles' => $service->findSimilar(
+                $request->input('query')
+            ),
+        ]);
     }
 
 }
