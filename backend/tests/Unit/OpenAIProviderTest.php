@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use App\Services\AI\Providers\OpenAIProvider;
+use App\Models\Ticket;
 
 class OpenAIProviderTest extends TestCase
 {

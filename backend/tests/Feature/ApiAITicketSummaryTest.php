@@ -23,7 +23,7 @@ class ApiAITicketSummaryTest extends TestCase
         ]);
 
         $response = $this->getJson(
-            "/api/v1/ai/tickets/{$ticket->id}/summary"
+            "/api/v1/tickets/{$ticket->id}/summary"
         );
 
         $response

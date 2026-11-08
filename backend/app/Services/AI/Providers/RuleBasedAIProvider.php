@@ -39,9 +39,12 @@ class RuleBasedAIProvider implements AIProvider
     }
 
     public function suggestReply(
-        string $message
+        Ticket $ticket
     ): string {
-        $message = strtolower($message);
+
+        $message = strtolower(
+            $ticket->title . ' ' . $ticket->description
+        );
 
         if (
             str_contains($message, 'outlook') ||
@@ -63,6 +66,7 @@ class RuleBasedAIProvider implements AIProvider
 
         return 'Coletar mais informações do usuário antes de prosseguir com o atendimento.';
     }
+
 
     private function detectCategory(string $text): string
     {
@@ -112,6 +116,18 @@ class RuleBasedAIProvider implements AIProvider
             'cause' => 'Não identificada',
             'solution' => 'Não registrada',
             'prevention' => 'Não registrada',
+        ];
+    }
+
+    public function generateClosureReport(
+        Ticket $ticket
+    ): array {
+
+        return [
+            'incident_summary' => '',
+            'root_cause' => '',
+            'solution' => '',
+            'lessons_learned' => '',
         ];
     }
 }

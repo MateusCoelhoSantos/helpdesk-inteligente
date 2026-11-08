@@ -7,10 +7,12 @@ use App\Services\AI\Contracts\AIProvider;
 use App\Services\AI\Clients\OpenAIClient;
 use App\Services\AI\Prompts\TicketClassificationPrompt;
 use App\Services\AI\Concerns\ExtractsJson;
+use App\Services\AI\Concerns\ValidatesClassification;
 
 class OpenAIProvider implements AIProvider
 {
     use ExtractsJson;
+    use ValidatesClassification;
 
     public function classify(
         string $title,
@@ -69,60 +71,6 @@ class OpenAIProvider implements AIProvider
 
     }
 
-    private function validateClassification(
-        array $data
-    ): array
-    {
-        $categories = [
-            'hardware',
-            'software',
-            'network',
-            'access',
-            'other',
-        ];
-
-        $priorities = [
-            'low',
-            'medium',
-            'high',
-            'critical'
-        ];
-
-        if (! in_array(
-            $data['category'] ?? '',
-            $categories
-        )) {
-            $data['category'] = 'other';
-        }
-
-        if (! in_array(
-            $data['priority'] ?? '',
-            $priorities
-        )) {
-            $data['priority'] = 'medium';
-        }
-
-        return $data;
-    }
-
-    private function extractJson(
-        string $content
-    ): array
-    {
-        $content = str_replace(
-            ['```json', '```'],
-            '',
-            $content
-        );
-
-        return json_decode(
-            trim($content),
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-    }
-
     public function summarize(
         Ticket $ticket
     ): string {
@@ -133,9 +81,10 @@ class OpenAIProvider implements AIProvider
     }
 
     public function suggestReply(
-        string $message
-    ): string {
-        return '[OPENAI] Resposta sugerida automaticamente.';
+        Ticket $ticket
+    ): string
+    {
+        return '[OPENAI] resposta';
     }
 
     public function __construct(
@@ -153,6 +102,18 @@ class OpenAIProvider implements AIProvider
             'cause' => '',
             'solution' => '',
             'prevention' => '',
+        ];
+    }
+
+    public function generateClosureReport(
+        Ticket $ticket
+    ): array
+    {
+        return [
+            'incident_summary' => '',
+            'root_cause' => '',
+            'solution' => '',
+            'lessons_learned' => '',
         ];
     }
 }
