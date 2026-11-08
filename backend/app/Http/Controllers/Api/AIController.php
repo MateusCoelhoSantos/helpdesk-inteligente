@@ -9,6 +9,7 @@ use App\Services\AI\Contracts\AIProvider;
 use App\Services\Knowledge\KnowledgeArticleService;
 use App\Models\KnowledgeArticle;
 use App\Services\Knowledge\KnowledgeSearchService;
+use App\Jobs\GenerateTicketSummaryJob;
 
 class AIController extends Controller
 {
@@ -36,10 +37,13 @@ class AIController extends Controller
 
         $ticket->load('comments');
 
+        GenerateTicketSummaryJob::dispatch(
+            $ticket->id
+        );
+
         return response()->json([
-            'summary' => $ai->summarize(
-                $ticket
-            ),
+            'message' =>
+                'Resumo enviado para processamento.'
         ]);
     }
 
