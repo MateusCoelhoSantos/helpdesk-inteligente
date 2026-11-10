@@ -151,5 +151,10 @@ Route::prefix('v1')->group(function () {
             'suggestKnowledgeArticles']
         );
 
+        Route::get(
+            '/tickets/{ticket}/ai-generations',
+            [AIController::class, 'generations']
+        );
+
     });
 });

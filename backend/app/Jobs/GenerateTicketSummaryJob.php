@@ -6,6 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use App\Models\Ticket;
 use App\Services\AI\Contracts\AIProvider;
+use App\Models\AIGeneration;
 
 class GenerateTicketSummaryJob
     implements ShouldQueue
@@ -27,12 +28,33 @@ class GenerateTicketSummaryJob
             $this->ticketId
         );
 
-        $summary = $ai->summarize(
-            $ticket
-        );
-
-        $ticket->update([
-            'ai_summary' => $summary,
+        $generation = AIGeneration::create([
+            'ticket_id' => $ticket->id,
+            'type' => 'summary',
+            'status' => 'processing',
         ]);
+
+        try {
+
+            $summary = $ai->summarize(
+                $ticket
+            );
+
+            $generation->update([
+                'status' => 'completed',
+                'result' => [
+                    'summary' => $summary,
+                ],
+            ]);
+
+        } catch (\Throwable $exception) {
+
+            $generation->update([
+                'status' => 'failed',
+                'error' => $exception->getMessage(),
+            ]);
+
+            throw $exception;
+        }
     }
 }

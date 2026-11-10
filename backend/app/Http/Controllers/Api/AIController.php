@@ -10,6 +10,7 @@ use App\Services\Knowledge\KnowledgeArticleService;
 use App\Models\KnowledgeArticle;
 use App\Services\Knowledge\KnowledgeSearchService;
 use App\Jobs\GenerateTicketSummaryJob;
+use App\Jobs\GenerateKnowledgeArticleJob;
 
 class AIController extends Controller
 {
@@ -90,17 +91,17 @@ class AIController extends Controller
     }
 
     public function generateKnowledgeArticle(
-        Ticket $ticket,
-        AIProvider $ai,
-        KnowledgeArticleService $service
+        Ticket $ticket
     )
     {
-        return response()->json(
-            $service->generateFromTicket(
-                $ticket,
-                $ai
-            )
+        GenerateKnowledgeArticleJob::dispatch(
+            $ticket->id
         );
+
+        return response()->json([
+            'message' =>
+                'Artigo enviado para processamento.',
+        ]);
     }
 
     public function listKnowledgeArticles()
@@ -140,6 +141,18 @@ class AIController extends Controller
             'suggested_articles' => $service->findSimilar(
                 $request->input('query')
             ),
+        ]);
+    }
+
+    public function generations(
+        Ticket $ticket
+    )
+    {
+        return response()->json([
+            'data' => $ticket
+                ->aiGenerations()
+                ->latest()
+                ->get(),
         ]);
     }
 

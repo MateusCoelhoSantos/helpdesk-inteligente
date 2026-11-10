@@ -160,4 +160,11 @@ class Ticket extends Model
         );
     }
 
+    public function aiGenerations()
+    {
+        return $this->hasMany(
+            AIGeneration::class
+        );
+    }
+
 }
