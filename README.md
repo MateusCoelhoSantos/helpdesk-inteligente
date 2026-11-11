@@ -1,306 +1,258 @@
 # HelpDesk Inteligente
 
-Sistema de gerenciamento de chamados desenvolvido com Laravel, focado em controle de atendimento, métricas operacionais, SLA, notificações internas e API REST.
+## Visão Geral
 
-## Demonstração
+O HelpDesk Inteligente é uma plataforma de Service Desk desenvolvida com Laravel, PostgreSQL e Inteligência Artificial local utilizando Ollama. O projeto evoluiu de um sistema tradicional de chamados para uma solução de suporte inteligente com classificação automática, geração de resumos, base de conhecimento, processamento assíncrono e API REST documentada.
 
-Em desenvolvimento.
-
-## Funcionalidades
-
-### Autenticação e Usuários
-
-- Login e Logout
-- Registro de usuários
-- Recuperação de senha
-- Controle de perfis
-- Permissões por função
-
-### Gestão de Chamados
-
-- Criação de chamados
-- Edição de chamados
-- Exclusão de chamados
-- Atribuição de responsáveis
-- Controle de status
-- Controle de prioridade
-- Controle de categoria
-- Filtros e pesquisa
-
-### Colaboração
-
-- Comentários em chamados
-- Anexos em chamados
-- Anexos em comentários
-
-### Histórico e Auditoria
-
-- Registro de alterações
-- Timeline de histórico
-- Alterações de status
-- Alterações de prioridade
-- Alterações de categoria
-- Alterações de responsáveis
-
-### Notificações
-
-- Notificações internas
-- Contador de notificações não lidas
-- Dropdown de notificações
-- Central de notificações
-- Marcação individual de leitura
-- Marcar todas como lidas
-
-### SLA
-
-- Registro automático de resolução
-- Tempo de resolução por chamado
-- Classificação de SLA
-- Indicadores de desempenho
-
-### Dashboard
-
-- Total de chamados
-- Chamados abertos
-- Chamados em andamento
-- Chamados aguardando retorno
-- Chamados resolvidos
-- Chamados críticos
-- Chamados sem responsável
-- Chamados atribuídos ao usuário
-- SLA médio
-- Chamados dentro do SLA
-- Chamados fora do SLA
-- Gráfico por status
-- Gráfico por categoria
-
-### API REST
-
-- GET /api/tickets
-- GET /api/tickets/{id}
-- GET /api/dashboard
-
-### Segurança
-
-- Middleware de autenticação
-- Políticas de acesso por perfil
-- Laravel Sanctum (em implementação)
-
-## Tecnologias Utilizadas
+## Arquitetura
 
 ### Backend
+- Laravel 12
+- PHP 8.5+
+- PostgreSQL
+- Laravel Sanctum
+- Laravel Queue
+- OpenAPI (Scramble)
+- Eloquent ORM
 
-- PHP 8+
-- Laravel 11
-- MySQL
+### Inteligência Artificial
+- Ollama
+- Qwen 2.5
+- Arquitetura baseada em Providers
+- Processamento assíncrono com Jobs e Queue
 
 ### Frontend
+- React
+- TypeScript
+- Vite
+- Axios
+- React Router DOM
+- Tailwind CSS (em implantação)
 
-- Blade
-- Bootstrap 5
-- Chart.js
+## Principais Funcionalidades
 
-### API
+### Gestão de Chamados
+- Criação de chamados
+- Atualização de chamados
+- Exclusão de chamados
+- Controle de status
+- Controle de categorias
+- Controle de prioridades
+- Pesquisa e filtros
+- Ordenação dinâmica
 
-- Laravel API Resources
-- REST API
-- Laravel Sanctum
-
-## Instalação
-
-### 1. Clonar o repositório
-
-```bash
-git clone https://github.com/seuusuario/helpdesk-inteligente.git
-```
-
-### 2. Entrar no diretório do projeto
-
-```bash
-cd helpdesk-inteligente/backend
-```
-
-### 3. Instalar dependências
-
-```bash
-composer install
-```
-
-### 4. Configurar ambiente
-
-```bash
-cp .env.example .env
-```
-
-```bash
-php artisan key:generate
-```
-
-### 5. Configurar banco de dados
-
-Edite o arquivo `.env`:
-
-```env
-DB_CONNECTION=postgres
-DB_HOST=127.0.0.1
-DB_PORT=5432
-DB_DATABASE=helpdesk_db
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
-```
-
-### 6. Executar migrations
-
-```bash
-php artisan migrate
-```
-
-### 7. Criar link para armazenamento
-
-```bash
-php artisan storage:link
-```
-
-### 8. Iniciar aplicação
-
-```bash
-php artisan serve
-```
-
-A aplicação estará disponível em:
-
-```text
-http://localhost:8000
-```
-## API REST
-
-A aplicação disponibiliza endpoints para integração com aplicações externas.
-
-### Listar chamados
-
-```http
-GET /api/tickets
-```
-
-### Exibir um chamado
-
-```http
-GET /api/tickets/{id}
-```
-
-### Métricas do dashboard
-
-```http
-GET /api/dashboard
-```
-
-### Exemplo de resposta
-
-```json
-{
-  "total_tickets": 24,
-  "open_tickets": 8,
-  "in_progress_tickets": 3,
-  "waiting_tickets": 4,
-  "resolved_tickets": 9,
-  "critical_tickets": 8
-}
-```
-## Funcionalidades Implementadas
-
-### Autenticação
-
-- Login
-- Logout
-- Recuperação de senha
-- Verificação de e-mail
-
-### Chamados
-
-- Cadastro
-- Edição
-- Exclusão
-- Filtros
-- Pesquisa
-- Categorias
-- Prioridades
-- Status
-
-### Atendimento
-
-- Comentários
-- Anexos
-- Responsáveis
-- Histórico de alterações
+### Colaboração
+- Comentários em chamados
+- Upload de anexos
+- Histórico completo de alterações
+- Auditoria de atividades
 
 ### Notificações
-
 - Central de notificações
 - Notificações não lidas
-- Contador em tempo real
-- Marcar notificações como lidas
+- Marcar individualmente como lida
 - Marcar todas como lidas
 
 ### Dashboard
-
-- Indicadores operacionais
-- Gráfico por status
-- Gráfico por categoria
+- Estatísticas operacionais
+- Indicadores de SLA
+- Chamados por categoria
+- Chamados por status
 - Chamados críticos
-- SLA médio
-- Chamados dentro do SLA
-- Chamados fora do SLA
 
-### API
+## Inteligência Artificial
 
-- Endpoints REST
-- Resources Laravel
-- Paginação
-- Respostas em JSON
+### Classificação Inteligente
+Classifica automaticamente:
+- Categoria
+- Prioridade
+- Nível de confiança
 
-## Testes
+### Resumo Inteligente
+Gera resumos com base em:
+- Ticket
+- Comentários
+- Histórico
 
-O projeto possui testes automatizados para:
+### Sugestão de Respostas
+Sugere respostas para agentes de suporte com base no contexto do chamado.
 
-- Autenticação da API
+### Closure Report
+Gera relatórios estruturados contendo:
+- Resumo do incidente
+- Causa raiz
+- Solução aplicada
+- Lições aprendidas
+
+### Base de Conhecimento
+Gera automaticamente artigos técnicos contendo:
+- Problema
+- Causa
+- Solução
+- Prevenção
+
+### Busca de Conhecimento
+Permite localizar artigos semelhantes para reutilização de soluções.
+
+## Processamento Assíncrono
+
+### Laravel Queue
+Implementado para processamento de IA em background.
+
+Jobs atualmente implementados:
+- GenerateTicketSummaryJob
+- GenerateKnowledgeArticleJob
+
+### Histórico de IA
+Tabela centralizada:
+
+```text
+ai_generations
+```
+
+Registra:
+- Tipo da geração
+- Status
+- Resultado
+- Erros
+- Data da execução
+
+## API REST
+
+### Tickets
+```http
+GET    /api/v1/tickets
+GET    /api/v1/tickets/{id}
+POST   /api/v1/tickets
+PUT    /api/v1/tickets/{id}
+DELETE /api/v1/tickets/{id}
+```
+
+### Inteligência Artificial
+```http
+POST /api/v1/ai/classify-ticket
+GET  /api/v1/tickets/{ticket}/summary
+GET  /api/v1/tickets/{ticket}/suggest-reply
+GET  /api/v1/tickets/{ticket}/closure-report
+```
+
+### Knowledge Base
+```http
+POST /api/v1/tickets/{ticket}/knowledge-articles
+GET  /api/v1/knowledge-articles
+POST /api/v1/knowledge-articles/suggest
+```
+
+### Histórico IA
+```http
+GET /api/v1/tickets/{ticket}/ai-generations
+```
+
+## Testes Automatizados
+
+O projeto possui suíte automatizada utilizando PHPUnit.
+
+Resultado atual:
+
+```text
+76 testes passando
+166 assertions
+0 falhas
+```
+
+Cobertura:
+- Autenticação
 - Tickets
+- Comentários
+- Anexos
 - Dashboard
 - Notificações
+- Policies
+- Providers de IA
+- Resumo Inteligente
+- Sugestão de Respostas
+- Classificação de Tickets
 
-Executar:
+Execução:
 
 ```bash
 php artisan test
 ```
 
+## Documentação da API
+
+Gerada utilizando Scramble:
+
+```bash
+php artisan scramble:export
+```
+
+Arquivo gerado:
+
+```text
+api.json
+```
+
+## Instalação Backend
+
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan storage:link
+```
+
+Executar API:
+
+```bash
+php artisan serve
+```
+
+## Instalação Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+## Estado Atual do Projeto
+
+### Concluído
+- Sistema de chamados
+- Dashboard operacional
+- Notificações
+- Histórico e auditoria
+- API REST
+- Integração Ollama
+- Classificação inteligente
+- Resumo inteligente
+- Sugestão de respostas
+- Closure Reports
+- Knowledge Base
+- Busca de conhecimento
+- Filas assíncronas
+- Histórico de IA
+- OpenAPI
+- Testes automatizados
+
+### Em Desenvolvimento
+- Frontend React
+- Dashboard avançado de IA
+- Interface da base de conhecimento
+- Integração completa React + Laravel
+
 ## Roadmap
 
-### Em desenvolvimento
+### Próximas Entregas
+- Interface React completa
+- Dashboard de IA
+- Closure Report assíncrono
+- Métricas avançadas
+- CI/CD
+- Docker
 
-- [ ] Autenticação da API com Sanctum
-- [ ] CRUD completo via API
-- [ ] Exportação Excel
-- [ ] Dashboard avançado de produtividade
-- [ ] Integração com FastAPI
+## Licença
 
-### Futuro
-
-- [ ] Classificação automática de chamados com IA
-- [ ] Base de conhecimento
-- [ ] Chatbot de suporte
-- [ ] Aplicação mobile
-
-## Sobre o Projeto
-
-O HelpDesk Inteligente é um sistema de gestão de chamados desenvolvido para simular um ambiente corporativo de suporte técnico.
-
-O projeto evoluiu além de um CRUD tradicional e atualmente conta com:
-
-- Gestão completa de chamados
-- Dashboard analítico
-- Métricas de SLA
-- Central de notificações
-- Histórico de auditoria
-- API REST para integração
-
-O objetivo é servir como ambiente de aprendizado prático em Laravel, arquitetura de software, APIs e futuras integrações com Inteligência Artificial.
+Projeto desenvolvido para fins de estudo, portfólio e evolução de arquitetura de software aplicada a Service Desk Inteligente com IA.

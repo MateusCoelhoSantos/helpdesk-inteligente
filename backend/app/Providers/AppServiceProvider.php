@@ -9,7 +9,11 @@ use Illuminate\Support\Facades\View;
 use App\Models\Ticket;
 use App\Policies\TicketPolicy;
 use Illuminate\Support\Facades\Gate;
-
+use App\Services\AI\Contracts\AIProvider;
+use App\Services\AI\Providers\RuleBasedAIProvider;
+use InvalidArgumentException;
+use App\Services\AI\Providers\OpenAIProvider;
+use App\Services\AI\Providers\OllamaProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,7 +22,32 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(
+            AIProvider::class,
+            function () {
+
+                return match (
+                    config('ai.provider')
+                ) {
+
+                    'rule-based' => app(
+                        RuleBasedAIProvider::class
+                    ),
+
+                    'openai' => app(
+                        OpenAIProvider::class
+                    ),
+
+                    'ollama' => app(
+                        OllamaProvider::class
+                    ),
+
+                    default => throw new InvalidArgumentException(
+                        'AI Provider not supported.'
+                    ),
+                };
+            }
+        );
     }
 
     /**

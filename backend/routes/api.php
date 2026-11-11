@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\AttachmentController;
 use App\Http\Controllers\Api\HistoryController;
+use App\Http\Controllers\Api\AIController;
+
 
 Route::prefix('v1')->group(function () {
 
@@ -98,6 +100,60 @@ Route::prefix('v1')->group(function () {
         Route::get(
             '/tickets/{ticket}/history',
             [HistoryController::class, 'index']
+        );
+
+        Route::post(
+            '/ai/classify-ticket',
+            [AIController::class, 'classifyTicket']
+        );
+
+        Route::get(
+            '/tickets/{ticket}/summary',
+            [AIController::class, 'summarizeTicket']
+        );
+
+        Route::get(
+            '/tickets/{ticket}/suggest-reply',
+            [AIController::class, 'suggestReply']
+        );
+
+        Route::get(
+            '/tickets/{ticket}/closure-report',
+            [AIController::class, 'closureReport']
+        );
+
+        Route::get(
+            '/tickets/{ticket}/knowledge-article',
+            [AIController::class, 'knowledgeArticle']
+        );
+
+        Route::post(
+            '/tickets/{ticket}/knowledge-articles',
+            [AIController::class,
+            'generateKnowledgeArticle']
+        );
+
+        Route::get(
+            '/knowledge-articles',
+            [AIController::class,
+            'listKnowledgeArticles']
+        );
+
+        Route::get(
+            '/knowledge-articles/search',
+            [AIController::class,
+            'searchKnowledgeArticles']
+        );
+
+        Route::post(
+            '/knowledge-articles/suggest',
+            [AIController::class,
+            'suggestKnowledgeArticles']
+        );
+
+        Route::get(
+            '/tickets/{ticket}/ai-generations',
+            [AIController::class, 'generations']
         );
 
     });

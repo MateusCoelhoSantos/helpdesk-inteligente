@@ -19,6 +19,8 @@ class Ticket extends Model
         'resolved_at',
         'user_id',
         'assigned_to',
+        'ai_provider',
+        'ai_confidence',    
     ];
 
     protected $casts = [
@@ -149,6 +151,20 @@ class Ticket extends Model
         return $this->hasMany(TicketAttachment::class)
             ->whereNull('comment_id')
             ->latest();
+    }
+
+    public function knowledgeArticles()
+    {
+        return $this->hasMany(
+            KnowledgeArticle::class
+        );
+    }
+
+    public function aiGenerations()
+    {
+        return $this->hasMany(
+            AIGeneration::class
+        );
     }
 
 }

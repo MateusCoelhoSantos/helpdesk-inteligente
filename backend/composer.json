@@ -10,10 +10,11 @@
         "darkaonline/l5-swagger": "^11.2",
         "laravel/framework": "^13.17",
         "laravel/sanctum": "^4.3",
-        "laravel/tinker": "^3.0"
+        "laravel/tinker": "^3.0",
+        "openai-php/client": "^0.22.0"
     },
     "require-dev": {
-        "dedoc/scramble": "^0.13.52",
+        "dedoc/scramble": "^0.13.53",
         "fakerphp/faker": "^1.23",
         "laravel/breeze": "^2.4",
         "laravel/pail": "^1.2.5",

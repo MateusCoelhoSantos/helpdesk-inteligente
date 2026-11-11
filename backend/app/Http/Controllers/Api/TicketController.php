@@ -6,7 +6,7 @@ use App\Models\Ticket;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TicketResource;
 use Illuminate\Http\Request;
-
+use App\Services\AI\Contracts\AIProvider;
 
 class TicketController extends Controller
 {
@@ -99,20 +99,48 @@ class TicketController extends Controller
     /**
      * Cria um novo ticket.
      */
-    public function store(Request $request)
+    public function store(
+        Request $request,
+        AIProvider $ai
+    )
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'category' => ['required'],
-            'priority' => ['required'],
+            'category' => ['sometimes'],
+            'priority' => ['sometimes'],
         ]);
 
         $validated['user_id'] = $request->user()->id;
 
+        $classifications = $ai->classify(
+            $validated['title'],
+            $validated['description']
+        );
+
         $ticket = Ticket::create([
-            ...$validated,
+            'user_id' => $request->user()->id,
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+
+            'category' => $classifications['category'],
+            'priority' => $classifications['priority'],
+
+            'ai_provider' => config('ai.provider'),
+            'ai_confidence' => $classifications['confidence'],
+            
             'status' => 'open',
+        ]);
+
+        $ticket->histories()->create([
+            'user_id' => $request->user()->id,
+            'action' => 'ai_classification',
+            'description' => sprintf(
+                'IA classificou o ticket como categoria "%s" e prioridade "%s" (confiança %.2f)',
+                $classifications['category'],
+                $classifications['priority'],
+                $classifications['confidence']
+            ),
         ]);
 
         return response()->json([

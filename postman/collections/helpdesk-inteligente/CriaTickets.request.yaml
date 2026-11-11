@@ -1,0 +1,24 @@
+$kind: http-request
+description: ""
+url: http://localhost:8000/api/v1/tickets
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"title\": \"Falha na rotina de backup\",\r
+
+    \    \"description\": \"A última execução da rotina de backup apresentou erro, sendo necessária a verificação dos registros para identificar a causa.\",\r
+
+    \    \"category\": \"other\",\r
+
+    \    \"priority\": \"critical\",\r
+
+    \    \"status\": \"open\"\r
+
+    \  }"
+auth:
+  type: bearer
+  credentials:
+    token: 5|TK9RfAbME0B8WRGjvbtRc5W6d4WV9BKn8fgIGsWw5fb541b7
+order: 1000
