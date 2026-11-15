@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Ticket;
 use App\Models\TicketComment;
 use Illuminate\Http\Request;
-use App\Models\TicketHistory;
 use App\Models\TicketAttachment;
 use App\Models\Notification;
+use App\Services\HistoryService;
 
 class TicketCommentController extends Controller
 {
-    public function store(Request $request, Ticket $ticket)
+    public function store(Request $request, Ticket $ticket, HistoryService $history)
     {
         $validated = $request->validate([
             'message' => ['required', 'string'],
@@ -31,12 +31,12 @@ class TicketCommentController extends Controller
             'message' => $validated['message'],
         ]);
 
-        TicketHistory::create([
-            'ticket_id' => $ticket->id,
-            'user_id' => auth()->id(),
-            'action' => 'commented',
-            'description' => auth()->user()->name . ' adicionou um comentário',
-        ]);
+        $history->record(
+            $ticket,
+            $request->user(),
+            'commented',
+            $request->user()->name . ' adicionou um comentário'
+        );
 
         if ($ticket->user_id !== auth()->id()) {
 
