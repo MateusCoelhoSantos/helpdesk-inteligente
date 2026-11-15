@@ -119,10 +119,10 @@ class OllamaProvider implements AIProvider
     ): array {
 
         $response = $this->client->chat(
-            TicketKnowledgePrompt::make(
-                $ticket
-            )
+            TicketKnowledgePrompt::make($ticket)
         );
+
+        dd($response['response']);
 
         $result = $this->extractJson(
             $response['response']

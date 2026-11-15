@@ -16,42 +16,51 @@ class TicketKnowledgePrompt
             ->implode("\n");
 
         return <<<PROMPT
-        Você é um especialista em documentação técnica.
+            Você é um especialista em documentação técnica.
 
-        Retorne APENAS JSON válido.
+            Retorne APENAS um objeto JSON válido.
 
-        Formato:
+            Formato:
 
-        {
-            "title": "",
-            "problem": "",
-            "cause": "",
-            "solution": "",
-            "prevention": ""
-        }
+            {
+                "title": "",
+                "problem": "",
+                "cause": "",
+                "solution": "",
+                "prevention": ""
+            }
 
-        Regras:
-        - Não use markdown.
-        - Não use blocos ```json.
-        - Não cite usuários.
-        - Não cite datas.
-        - Não cite nomes de técnicos.
-        - Gere conteúdo reutilizável para uma base de conhecimento.
+            Regras:
+            - Não use markdown.
+            - Não use blocos ```json.
+            - Não cite usuários.
+            - Não cite datas.
+            - Não cite nomes de técnicos.
+            - Gere conteúdo reutilizável para uma base de conhecimento.
+            - Não adicione comentários.
+            - Não adicione observações.
+            - Não adicione explicações.
+            - Não adicione notas internas.
+            - Não adicione texto antes do JSON.
+            - Não adicione texto depois do JSON.
+            - Não explique o resultado.
+            - Não inclua raciocínio.
+            - Responda exclusivamente com o objeto JSON.
 
-        Título:
-        {$ticket->title}
+            Título:
+            {$ticket->title}
 
-        Descrição:
-        {$ticket->description}
+            Descrição:
+            {$ticket->description}
 
-        Status:
-        {$ticket->status}
+            Status:
+            {$ticket->status}
 
-        Categoria:
-        {$ticket->category}
+            Categoria:
+            {$ticket->category}
 
-        Comentários:
-        {$comments}
+            Comentários:
+            {$comments}
         PROMPT;
     }
 }

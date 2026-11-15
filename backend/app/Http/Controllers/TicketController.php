@@ -356,11 +356,13 @@ class TicketController extends Controller
         string $action,
         string $description
     ): void {
-        TicketHistory::create([
-            'ticket_id' => $ticket->id,
-            'user_id' => auth()->id(),
-            'action' => $action,
-            'description' => $description,
-        ]);
+
+        app(\App\Services\HistoryService::class)
+            ->record(
+                $ticket,
+                auth()->user(),
+                $action,
+                $description
+            );
     }
 }

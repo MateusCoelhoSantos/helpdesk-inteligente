@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\TicketComment;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CommentResource;
+use App\Services\HistoryService;
 
 class CommentController extends Controller
 {
@@ -24,7 +25,8 @@ class CommentController extends Controller
 
     public function store(
         Request $request,
-        Ticket $ticket
+        Ticket $ticket,
+        HistoryService $history
     ) {
         $this->authorize('view', $ticket);
 
@@ -37,6 +39,13 @@ class CommentController extends Controller
             'user_id' => $request->user()->id,
             'message' => $validated['message'],
         ]);
+
+        $history->record(
+            $ticket,
+            $request->user(),
+            'commented',
+            $request->user()->name . ' adicionou um comentário'
+        );
 
         return (new CommentResource(
             $comment->load('user:id,name')
